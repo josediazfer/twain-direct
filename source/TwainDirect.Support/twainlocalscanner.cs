@@ -169,6 +169,7 @@ namespace TwainDirect.Support
             // Our locks...
             m_objectLockDeviceApi = new object();
             m_objectLockDeviceHttpServerStop = new object();
+            m_objectLockDeviceCloudConnStop = new object();
             m_objectLockOnChangedBridge = new object();
 
             // Init our idle session timeout...
@@ -228,6 +229,16 @@ namespace TwainDirect.Support
             HttpListenerContextBase httplistenercontextbase = new HttpListenerContextBase();
             httplistenercontextbase.Initialize(a_httplistenercontext);
             DeviceDispatchCommandInternal(false, a_szJsonCommand, httplistenercontextbase);
+        }
+
+        public enum STARTING_CALLBACK_EVENT
+        {
+            LOCAL_BAD_PARAMETER,
+            LOCAL_SERVER_STARTED,
+            LOCAL_ERROR_STARTING,
+            CLOUD_CONNECTION_FAILED,
+            CLOUD_CONNECTION_ABORTED,
+            CLOUD_CONNECTION_SUCCESS
         }
 
         public void DeviceDispatchCommandInternal
@@ -554,6 +565,14 @@ namespace TwainDirect.Support
         }
 
         /// <summary>
+        /// Delegate for the Starting process callback...
+        /// </summary>
+        /// <param name="startingEvent">event name</param>
+        /// <param name="message">event message detail description</param>
+        /// <returns></returns>
+        public delegate void StartingCallback(STARTING_CALLBACK_EVENT startingEvent, String message);
+
+        /// <summary>
         /// The DNS name of the user owning the current createSession...
         /// </summary>
         /// <returns></returns>
@@ -571,14 +590,148 @@ namespace TwainDirect.Support
         /// TWAIN Cloud.  Set flags letting us know what we got...
         /// </summary>
         /// <param name="a_devicesessionCloud">the session</param>
-        /// <param name="a_szCloudApiRoot">the uri</param>
-        /// <param name="a_szCloudScannerId">the device-id guid</param>
         /// <returns></returns>
-        public async Task<bool> DeviceHttpServerStart
+        public async Task<bool> DeviceCloudServerConnStart
         (
             DeviceSession a_devicesessionCloud,
             string a_szCloudApiRoot,
-            string a_szCloudScannerId
+            string a_szCloudScannerId,
+            StartingCallback a_startingCloudCallback = null
+        )
+        {
+            // We already have one cloud connection...
+            if (m_devicesessionCloud != null)
+            {
+                return true;
+            }
+            a_devicesessionCloud.Received += (sender, message) =>
+            {
+                Debug.WriteLine(message);
+
+                _= Task.Run(async () =>
+                {
+                    var cloudMessage = JsonConvert.DeserializeObject<CloudMessage>(message, CloudManager.SerializationSettings);
+
+                    var context = new HttpListenerContextBase();
+
+                    var resource = cloudMessage.Url;
+
+                    // Skip over /privet, if found...
+                    var startIndex = resource.IndexOf("/privet");
+                    if (startIndex > 0)
+                    {
+                        resource = resource.Substring(startIndex);
+                    }
+
+                    var headers = new NameValueCollection();
+                    foreach (var pair in cloudMessage.Headers)
+                    {
+                        headers.Add(pair.Key, pair.Value);
+                    }
+
+                    var requestId = cloudMessage.Headers.FirstOrDefault(h =>
+                        string.Equals(h.Key, "X-TWAIN-Cloud-Request-Id",
+                            StringComparison.InvariantCultureIgnoreCase)).Value;
+
+                    context.Response = new HttpListenerResponseBase(a_devicesessionCloud);
+                    var responseStream = context.Response.OutputStream as ReactiveMemoryStream;
+                    responseStream.StreamClosed += async (s, a) =>
+                    {
+                        var deviceResponse = new CloudDeviceResponse
+                        {
+                            RequestId = requestId,
+                            StatusCode = context.Response.StatusCode,
+                            StatusDescription = context.Response.StatusDescription,
+                            Body = context.Response.GetBodyString(),
+                            Headers = context.Response.Headers.OfType<string>().ToDictionary(header => header, header => context.Response.Headers[header]),
+                        };
+
+                        var responseMessage = JsonConvert.SerializeObject(deviceResponse, CloudManager.SerializationSettings);
+                        try
+                        {
+                            await a_devicesessionCloud.Send(responseMessage);
+                        } catch(Exception exception)
+                        {
+                            Log.Error("Failed to send message to cloud " + exception.Message);
+                        }
+                    };
+
+                    context.Request = new HttpListenerRequestBase
+                    {
+                        Headers = headers,
+                        HttpMethod = cloudMessage.Method,
+                        RawUrl = resource,
+                        Url = new Uri(cloudMessage.Url)
+                    };
+
+                    DeviceDispatchCommandInternal(true, cloudMessage.Body, context);
+                });
+            };
+
+            // Close connection and free resources
+            DeviceCloudConnStop();
+
+            try
+            {
+                await connectToCloudServer(a_devicesessionCloud, a_szCloudApiRoot, a_szCloudScannerId);
+                a_startingCloudCallback?.Invoke(STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_SUCCESS, "connection success");
+            }
+            catch(Exception exception)
+            {
+                Log.Error("DeviceCloudServerConnStart: Connection failed " + exception.Message);
+
+                m_cancelCloudConnToken = new CancellationTokenSource();
+                CancellationToken lvCancelToken = m_cancelCloudConnToken.Token;
+
+                _ = Task.Run(async () =>
+                {
+                    bool lbConnToCloud = false;
+                    int iRetries = 5000, iRetry = 0;
+
+                    do
+                    {
+                        try
+                        {
+                            await connectToCloudServer(a_devicesessionCloud, a_szCloudApiRoot, a_szCloudScannerId);
+                            lbConnToCloud = true;
+                        }
+                        catch (Exception)
+                        {
+                            a_startingCloudCallback?.Invoke(STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_FAILED,
+                                                            "connection failed, retrying in 30 seconds...");
+                            Thread.Sleep(30000);
+                            iRetry++;
+                        }
+                    } while (!lvCancelToken.IsCancellationRequested && !lbConnToCloud && iRetry < iRetries);
+
+                    if (lbConnToCloud)
+                    {
+                        a_startingCloudCallback?.Invoke(STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_SUCCESS, "connection success");
+                    }
+                    else
+                    { 
+                        a_startingCloudCallback?.Invoke(STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_ABORTED, "connection aborted");
+                    }
+
+                    return lbConnToCloud;
+                }, lvCancelToken);
+            }
+
+            return (true);
+        }
+
+        /// <summary>
+        /// Start monitoring for HTTP commands from TWAIN Local.
+        /// Set flags letting us know what we got...
+        /// </summary>
+        /// <param name="a_szCloudApiRoot">the uri</param>
+        /// <param name="a_szCloudScannerId">the device-id guid</param>
+        /// <returns></returns>
+        public bool DeviceHttpServerStart
+        (
+            string a_szCloudApiRoot,
+            string a_szCloudScannerId,
+            StartingCallback a_startingCallbak = null
         )
         {
             int iPort;
@@ -590,111 +743,32 @@ namespace TwainDirect.Support
                 return (true);
             }
 
-            // Assume the worst...
-            m_blTwainLocalStarted = false;
-            m_blTwainCloudStarted = false;
-
-            // Squirrel this away, if it's null we're only monitoring for TWAIN Local clients,
-            // otherwise it's possible for us to get requests from TWAIN Cloud and TWAIN Local...
-            m_devicesessionCloud = a_devicesessionCloud;
-
             // Get our port...
             if (!int.TryParse(Config.Get("usePort", "34034"), out iPort))
             {
-                Log.Error("DeviceHttpServerStart: bad port..." + Config.Get("usePort", "34034"));
+                a_startingCallbak?.Invoke(STARTING_CALLBACK_EVENT.LOCAL_BAD_PARAMETER,
+                                            "invalid format port number " + Config.Get("usePort", "34034"));
                 return (false);
             }
 
             // Validate values, note is optional, so we don't test it...
             if (string.IsNullOrEmpty(m_twainlocalsessionInfo.DeviceRegisterGetTwainLocalInstanceName()))
             {
-                Log.Error("DeviceHttpServerStart: bad instance name...");
+                a_startingCallbak?.Invoke(STARTING_CALLBACK_EVENT.LOCAL_BAD_PARAMETER,
+                                            "empty instance name");
                 return (false);
             }
             if (iPort == 0)
             {
-                Log.Error("DeviceHttpServerStart: bad port...");
+                a_startingCallbak?.Invoke(STARTING_CALLBACK_EVENT.LOCAL_BAD_PARAMETER,
+                                            "invalid port number 0");
                 return (false);
             }
             if (string.IsNullOrEmpty(m_twainlocalsessionInfo.DeviceRegisterGetTwainLocalTy()))
             {
-                Log.Error("DeviceHttpServerStart: bad ty...");
+                a_startingCallbak?.Invoke(STARTING_CALLBACK_EVENT.LOCAL_BAD_PARAMETER,
+                                            "bad ty...");
                 return (false);
-            }
-
-            // Handle TWAIN Cloud monitoring...
-            if (m_devicesessionCloud != null)
-            {
-                // TBD: We only need these because we can't get them from DeviceSesson right now...
-                m_szCloudApiRoot = a_szCloudApiRoot;
-                m_szCloudScannerId = a_szCloudScannerId;
-                m_devicesessionCloud.Received += (sender, message) =>
-                {
-                    Debug.WriteLine(message);
-
-                    Task.Run(async () =>
-                    {
-                        var cloudMessage = JsonConvert.DeserializeObject<CloudMessage>(message, CloudManager.SerializationSettings);
-
-                        var context = new HttpListenerContextBase();
-
-                        var resource = cloudMessage.Url;
-
-                        // Skip over /privet, if found...
-                        var startIndex = resource.IndexOf("/privet");
-                        if (startIndex > 0)
-                        {
-                            resource = resource.Substring(startIndex);
-                        }
-
-                        var headers = new NameValueCollection();
-                        foreach (var pair in cloudMessage.Headers)
-                        {
-                            headers.Add(pair.Key, pair.Value);
-                        }
-
-                        var requestId = cloudMessage.Headers.FirstOrDefault(h =>
-                            string.Equals(h.Key, "X-TWAIN-Cloud-Request-Id",
-                                StringComparison.InvariantCultureIgnoreCase)).Value;                            
-
-                        context.Response = new HttpListenerResponseBase(m_devicesessionCloud);
-                        var responseStream = context.Response.OutputStream as ReactiveMemoryStream;
-                        responseStream.StreamClosed += async (s, a) =>
-                        {
-                            var deviceResponse = new CloudDeviceResponse
-                            {
-                                RequestId = requestId,
-                                StatusCode = context.Response.StatusCode,
-                                StatusDescription = context.Response.StatusDescription,
-                                Body = context.Response.GetBodyString(),
-                                Headers = context.Response.Headers.OfType<string>().ToDictionary(header => header, header => context.Response.Headers[header]),
-                            };
-
-                            var responseMessage = JsonConvert.SerializeObject(deviceResponse, CloudManager.SerializationSettings);
-                            await m_devicesessionCloud.Send(responseMessage);
-                        };
-
-                        context.Request = new HttpListenerRequestBase
-                        {
-                            Headers = headers,
-                            HttpMethod = cloudMessage.Method,
-                            RawUrl = resource,
-                            Url = new Uri(cloudMessage.Url)
-                        };
-
-                        DeviceDispatchCommandInternal(true, cloudMessage.Body, context);
-                    });
-                };
-
-                try
-                {
-                    await m_devicesessionCloud.Connect();
-                    m_blTwainCloudStarted = true;
-                }
-                catch (Exception exception)
-                {
-                    Log.Error("DeviceHttpServerStart: connect failed - " + exception.Message);
-                }
             }
 
             // Handle TWAIN Local monitoring...
@@ -735,24 +809,35 @@ namespace TwainDirect.Support
                 );
                 if (blSuccess)
                 {
+                    a_startingCallbak?.Invoke(STARTING_CALLBACK_EVENT.LOCAL_SERVER_STARTED, "server started");
                     m_blTwainLocalStarted = true;
                 }
                 else
                 {
+                    m_httpserver.ServerStop();
+                    m_httpserver = null;
                     // Don't log an error if bonjour isn't installed...
                     if (blServiceIsAvailable)
                     {
+                        a_startingCallbak?.Invoke(STARTING_CALLBACK_EVENT.LOCAL_ERROR_STARTING, "failed to start local http server");
                         Log.Error("DeviceHttpServerStart: ServerStart failed...");
                     }
+                    else
+                    {
+                        a_startingCallbak?.Invoke(STARTING_CALLBACK_EVENT.LOCAL_ERROR_STARTING, "failed to register device on DNS-SD");
+                    }
+                    
                 }
             }
             catch (Exception exception)
             {
                 Log.Error("DeviceHttpServerStart: ServerStart failed - " + exception.Message);
+                a_startingCallbak?.Invoke(STARTING_CALLBACK_EVENT.LOCAL_ERROR_STARTING,
+                            "failed to start local http server '" + exception.Message + "'");
             }
 
             // All done...
-            return (true);
+            return (m_blTwainLocalStarted);
         }
 
         /// <summary>
@@ -763,15 +848,37 @@ namespace TwainDirect.Support
         {
             lock (m_objectLockDeviceHttpServerStop)
             {
-                // Nothing to do...
-                if (m_httpserver == null)
+                if (m_httpserver != null)
                 {
-                    return;
+                    m_httpserver.ServerStop();
+                    m_httpserver = null;
                 }
+                m_blTwainLocalStarted = false;
+            }
+        }
 
+
+        /// <summary>
+        /// Shutdown Cloud connection
+        /// </summary>
+        /// <returns></returns>
+        public async void DeviceCloudConnStop()
+        {
+            lock (m_objectLockDeviceCloudConnStop)
+            {
                 // Shut it down...
-                m_httpserver.ServerStop();
-                m_httpserver = null;
+                if (m_devicesessionCloud != null)
+                {
+                    m_devicesessionCloud.Dispose();
+                    m_devicesessionCloud = null;
+                }
+                if (m_cancelCloudConnToken != null)
+                {
+                    m_cancelCloudConnToken.Cancel();
+                    m_cancelCloudConnToken.Dispose();
+                    m_cancelCloudConnToken = null;
+                }
+                m_blTwainCloudStarted = false;
             }
         }
 
@@ -1344,6 +1451,25 @@ namespace TwainDirect.Support
 
             // All done...
             return (true);
+        }
+
+        private async Task<bool> connectToCloudServer
+        (
+            DeviceSession a_devicesessionCloud,
+            string a_szCloudApiRoot,
+            string a_szCloudScannerId
+        )
+        {
+            await a_devicesessionCloud.Connect();
+
+            // Squirrel this away, if it's null we're only monitoring for TWAIN Local clients,
+            // otherwise it's possible for us to get requests from TWAIN Cloud and TWAIN Local...
+            m_devicesessionCloud = a_devicesessionCloud;
+            m_szCloudApiRoot = a_szCloudApiRoot;
+            m_szCloudScannerId = a_szCloudScannerId;
+            m_blTwainCloudStarted = true;
+
+            return true;
         }
 
         /// <summary>
@@ -1971,7 +2097,7 @@ namespace TwainDirect.Support
                         apicmd = m_twainlocalsession.GetApicmdEvents()[ii];
 
                         // We're done...
-                            if (apicmd == null)
+                        if (apicmd == null)
                         {
                             break;
                         }
@@ -3890,6 +4016,7 @@ namespace TwainDirect.Support
         /// </summary>
         private object m_objectLockDeviceApi;
         private object m_objectLockDeviceHttpServerStop;
+        private object m_objectLockDeviceCloudConnStop;
         private object m_objectLockOnChangedBridge;
 
         /// <summary>
@@ -6596,7 +6723,7 @@ namespace TwainDirect.Support
 
                                 // End session.
                                 if (blNoSession)
-                                {                                 
+                                {
                                     EndSession();
                                 }
 
@@ -6676,7 +6803,7 @@ namespace TwainDirect.Support
 
                                 // End session.
                                 if (blNoSession)
-                                {                                  
+                                {
                                     EndSession();
                                 }
 
@@ -6951,7 +7078,7 @@ namespace TwainDirect.Support
         /// </summary>
         private List<MapCommandIdToImageBlockNum> m_lmapcommandidtoimageblocknum = new List<MapCommandIdToImageBlockNum>();
         private object m_objectMapCommandIdToImageBlockNumLock = new object();
-         
+
         #endregion
 
 
@@ -7594,6 +7721,11 @@ namespace TwainDirect.Support
         /// Our current platform...
         /// </summary>
         protected static Platform ms_platform = Platform.UNKNOWN;
+
+        /// <summary>
+        /// Cancel mqtt connection retries thread.
+        /// </summary>
+        protected CancellationTokenSource m_cancelCloudConnToken;
 
         #endregion
 

@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using TwainDirect.Support;
 
@@ -85,25 +86,43 @@ namespace TwainDirect.Scanner
                     //ServiceBase.Run(service);
                     break;
 
-                case Mode.TERMINAL:
+                case Mode.TERMINAL:                    
                     if (TwainLocalScanner.GetPlatform() == TwainLocalScanner.Platform.WINDOWS)
                     {
                         Interpreter.CreateConsole();
-                    }
-                    Terminal terminal = new TwainDirect.Scanner.Terminal();
-                    switch (szCommand.ToLower())
+                    }                    
                     {
-                        default:
-                            Log.Error("Unrecognized command: " + szCommand);
-                            break;
-                        case "register":
-                            terminal.Register();
-                            break;
-                        case "start":
-                            terminal.Start();
-                            break;
+                        string szError = null;
+
+                        if (szCommand == null)
+                        {
+                            szError = "Missing command argument";
+                        }
+                        else
+                        {
+                            Terminal terminal = new TwainDirect.Scanner.Terminal();
+
+                            switch (szCommand.ToLower())
+                            {
+                                default:
+                                    szError = "Unrecognized command: " + szCommand;
+                                    break;
+                                case "register":
+                                    terminal.Register();
+                                    break;
+                                case "start":
+                                    terminal.Start().Wait();
+                                    break;
+                            }
+
+                            terminal.Dispose();
+                        }
+                        if (szError != null)
+                        {
+                            Console.Error.WriteLine(szError);
+                            Console.ReadLine();
+                        }
                     }
-                    terminal.Dispose();
                     break;
 
                 // Fire up our application window...

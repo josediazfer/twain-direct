@@ -16,6 +16,21 @@
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -81,6 +96,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -173,6 +189,7 @@
     </None>
     <None Include="Properties\Settings.settings">
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <Generator>SettingsSingleFileGenerator</Generator>
     </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -181,6 +198,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud.Forms\HazyBits.Twain.Cloud.Forms.csproj">
+      <Project>{0fbf20be-2155-4e58-abcb-df95dc7ee5a4}</Project>
+      <Name>HazyBits.Twain.Cloud.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud\HazyBits.Twain.Cloud.csproj">
+      <Project>{efd1d5e1-3d88-40f9-842c-ee72b4644061}</Project>
+      <Name>HazyBits.Twain.Cloud</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TwainDirect.Support\TwainDirect.Support.csproj">
       <Project>{50d52482-9c72-45b3-9bcf-1e4b49976e48}</Project>
       <Name>TwainDirect.Support</Name>
@@ -191,15 +216,24 @@
     <None Include="Resources\SystemTray.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HazyBits.Twain.Cloud.Forms">
-      <Version>1.0.42</Version>
-    </PackageReference>
     <PackageReference Include="SQLite.CodeFirst">
       <Version>1.5.1.25</Version>
     </PackageReference>
     <PackageReference Include="System.Data.SQLite">
       <Version>1.0.108</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -216,7 +250,8 @@ XCOPY "$(ProjectDir)..\TwainDirect.Support\bin\$(PlatformName)\$(ConfigurationNa
 XCOPY "$(ProjectDir)..\TwainDirect.Support\bin\$(PlatformName)\$(ConfigurationName)\libssl-*.dll" "$(TargetDir)" /i /e /y /q
 XCOPY "$(ProjectDir)..\TwainDirect.Support\bin\$(PlatformName)\$(ConfigurationName)\pdfras_digitalsignature.dll" "$(TargetDir)" /i /e /y /q
 XCOPY "$(ProjectDir)..\TwainDirect.Support\bin\$(PlatformName)\$(ConfigurationName)\pdfras_encryption.dll" "$(TargetDir)" /i /e /y /q
-XCOPY "$(ProjectDir)..\TwainDirect.Support\bin\$(PlatformName)\$(ConfigurationName)\certificate.p12" "$(TargetDir)data" /i /e /y /q</PostBuildEvent>
+XCOPY "$(ProjectDir)..\TwainDirect.Support\bin\$(PlatformName)\$(ConfigurationName)\certificate.p12" "$(TargetDir)data" /i /e /y /q
+COPY "$(ProjectDir)TwainDirect.Scanner.appdata.txt" "$(ProjectDir)bin\x86\Debug\TwainDirect.Scanner.appdata.txt" /y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>echo Pre-build actions...

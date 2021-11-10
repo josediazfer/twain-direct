@@ -38,6 +38,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Resources;
 using System.Threading.Tasks;
+using System.Threading;
 using HazyBits.Twain.Cloud.Client;
 using HazyBits.Twain.Cloud.Device;
 using HazyBits.Twain.Cloud.Forms;
@@ -239,21 +240,20 @@ namespace TwainDirect.Scanner
         /// Start polling for tasks...
         /// </summary>
         /// <returns>true on success</returns>
-        public async Task<bool> MonitorTasksStart()
+        public async Task<bool> MonitorTasksStart(TwainLocalScannerDevice.StartingCallback startingCallback = null)
         {
             DeviceSession devicesession = null;
-            string szCloudApiRoot = "";
+            string szCloudApiRoot = CloudManager.GetCloudApiRoot();
             string szCloudScannerId = "";
-
+            
             var cloudScanner = GetCurrentCloudScanner();
-
             // If cloud fails, we should keep going so that the
             // user can still run TWAIN Local...
             if (cloudScanner != null)
             { 
                 try
                 {
-                    szCloudApiRoot = CloudManager.GetCloudApiRoot();
+                    
                     var twaincloudtokens = new TwainCloudTokens(cloudScanner.AuthorizationToken, cloudScanner.RefreshToken);
                     var twaincloudclient = new TwainCloudClient(szCloudApiRoot, twaincloudtokens);
                     twaincloudclient.TokensRefreshed += (sender, args) =>
@@ -273,15 +273,13 @@ namespace TwainDirect.Scanner
             }
 
             // Start monitoring for commands...
-            var blSuccess = await m_twainlocalscannerdevice.DeviceHttpServerStart(devicesession, szCloudApiRoot, szCloudScannerId);
-            if (!blSuccess)
+            var blSuccess = m_twainlocalscannerdevice.DeviceHttpServerStart(szCloudApiRoot, szCloudScannerId, startingCallback);
+            if (blSuccess && devicesession != null)
             {
-                Log.Error("MonitorTasksStart: DeviceHttpServerStart failed...");
-                return (false);
+                // Start cloud connection...
+                return await m_twainlocalscannerdevice.DeviceCloudServerConnStart(devicesession, szCloudApiRoot, szCloudScannerId, startingCallback);
             }
-
-            // All done...
-            return (true);
+            return blSuccess;
         }
 
         private static void SaveScannerRegistration(CloudScanner scanner)
@@ -304,6 +302,8 @@ namespace TwainDirect.Scanner
 
             // Stop advertising us...
             m_twainlocalscannerdevice.DeviceHttpServerStop();
+            m_twainlocalscannerdevice.DeviceCloudConnStop();
+
         }
 
         /// <summary>
@@ -369,6 +369,7 @@ namespace TwainDirect.Scanner
                 registrationDialog.ShowDialog();
 
                 var pollResult = registrationDialog.PollResponse;
+                registrationDialog.Dispose();
                 if (pollResult != null)
                 {
                     var cloudScanner = new CloudScanner
@@ -715,6 +716,9 @@ namespace TwainDirect.Scanner
         /// on-SANE...
         /// </summary>
         private string m_szTwainDirectOn;
+
+
+        private CancellationTokenSource m_cancelCloudConnToken;
 
         #endregion
     }

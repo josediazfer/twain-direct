@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwainDirect.App", "TwainDirect.App\TwainDirect.App.csproj", "{DE8AC167-CFF1-446D-9145-29179CA1B472}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -59,6 +59,12 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "TwainDirect.Certification.I
 	ProjectSection(ProjectDependencies) = postProject
 		{ED11A4C1-1C03-4092-B1FA-F1D35C47D59D} = {ED11A4C1-1C03-4092-B1FA-F1D35C47D59D}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HazyBits Cloud", "HazyBits Cloud", "{4AB765A7-0B31-4E75-BA6F-E177FFE0364D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HazyBits.Twain.Cloud", "..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud\HazyBits.Twain.Cloud.csproj", "{EFD1D5E1-3D88-40F9-842C-EE72B4644061}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HazyBits.Twain.Cloud.Forms", "..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud.Forms\HazyBits.Twain.Cloud.Forms.csproj", "{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -202,6 +208,30 @@ Global
 		{8BC49CAB-04A5-4480-838B-14E5A9E5DB27}.Release|x64.ActiveCfg = Release|x86
 		{8BC49CAB-04A5-4480-838B-14E5A9E5DB27}.Release|x86.ActiveCfg = Release|x86
 		{8BC49CAB-04A5-4480-838B-14E5A9E5DB27}.Release|x86.Build.0 = Release|x86
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Debug|x64.Build.0 = Debug|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Debug|x86.Build.0 = Debug|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Release|x64.ActiveCfg = Release|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Release|x64.Build.0 = Release|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Release|x86.ActiveCfg = Release|Any CPU
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061}.Release|x86.Build.0 = Release|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Debug|x64.Build.0 = Debug|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Debug|x86.Build.0 = Debug|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Release|x64.ActiveCfg = Release|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Release|x64.Build.0 = Release|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Release|x86.ActiveCfg = Release|Any CPU
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +250,8 @@ Global
 		{BDD70370-60CC-40CA-B5DF-91B2604E5708} = {70412968-24B4-4588-AE04-FC1B4003D794}
 		{F7242462-ABB2-4931-858C-D30C33B1DA3B} = {CF00C1EB-DEEF-4528-A33C-03BA5B301BE0}
 		{8BC49CAB-04A5-4480-838B-14E5A9E5DB27} = {CF00C1EB-DEEF-4528-A33C-03BA5B301BE0}
+		{EFD1D5E1-3D88-40F9-842C-EE72B4644061} = {4AB765A7-0B31-4E75-BA6F-E177FFE0364D}
+		{0FBF20BE-2155-4E58-ABCB-DF95DC7EE5A4} = {4AB765A7-0B31-4E75-BA6F-E177FFE0364D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {616FC2A9-86E2-4F42-8D07-DE670228EC5B}

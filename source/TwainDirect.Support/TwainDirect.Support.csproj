@@ -61,6 +61,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -105,12 +106,18 @@
     <Compile Include="twainlocalscanner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HazyBits.Twain.Cloud">
-      <Version>1.0.42</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>6.0.8</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud\HazyBits.Twain.Cloud.csproj">
+      <Project>{efd1d5e1-3d88-40f9-842c-ee72b4644061}</Project>
+      <Name>HazyBits.Twain.Cloud</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

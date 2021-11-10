@@ -292,19 +292,31 @@ namespace TwainDirect.Scanner
             // Start polling...
             Display("");
             Display("Starting, please wait...");
-            blSuccess = await m_scanner.MonitorTasksStart();
+            blSuccess = await m_scanner.MonitorTasksStart((code, message) =>
+            {
+                switch (code)
+                {
+                    // Twain Local states
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_BAD_PARAMETER:
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_ERROR_STARTING:
+                        Display("TWAIN Local " + message);
+                        break;
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_SERVER_STARTED:
+                        Display("TWAIN Local is ready for use...");
+                        break;
+                    // Twain Cloud states
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_FAILED:
+                        Display("TWAIN Cloud  " + message);
+                        break;
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_SUCCESS:
+                        Display("TWAIN Cloud is ready for use...");
+                        break;
+                }
+            });
             if (!blSuccess)
             {
                 Log.Error("MonitorTasksStart failed...");
                 return;
-            }
-            if (m_scanner.IsTwainLocalStarted())
-            {
-                Display("TWAIN Local is ready for use...");
-            }
-            if (m_scanner.IsTwainCloudStarted())
-            {
-                Display("TWAIN Cloud is ready for use...");
             }
 
             // Prompt...

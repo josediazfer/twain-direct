@@ -375,9 +375,15 @@ namespace TwainDirect.Scanner
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private async void m_buttonCloudRegister_Click(object sender, EventArgs e)
         {
-            StartNpmIfNeeded(true);
-            await m_formmain.RegisterCloud();
-            LoadRegisteredCloudDevices();
+            try
+            {
+                StartNpmIfNeeded(true);
+                await m_formmain.RegisterCloud();
+                LoadRegisteredCloudDevices();
+            } catch(Exception exception)
+            {                
+                MessageBox.Show(String.Format(Config.GetResource(m_resourcemanager, "errRegisterCloudScanner"), exception.Message), Config.GetResource(m_resourcemanager, "strFormMainTitle"));
+            }            
         }
 
         private void m_CloudDevicesComboBox_SelectedIndexChanged(object sender, EventArgs e)

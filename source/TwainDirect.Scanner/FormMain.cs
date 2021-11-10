@@ -811,33 +811,43 @@ namespace TwainDirect.Scanner
             }
 
             // Start monitoring the cloud...
-            try
+            int iConnectionRetries = 0;
+
+            blSuccess = await m_scanner.MonitorTasksStart((code, message) =>
             {
-                blSuccess = await m_scanner.MonitorTasksStart();
-                if (!blSuccess)
+                switch (code)
                 {
-                    Log.Error("MonitorTasksStart failed...");
-                    MessageBox.Show("Failed to start cloud monitoring, check the logs for more information.", Config.GetResource(m_resourcemanager, "strFormMainTitle"));
-                    SetButtons(ButtonState.WaitingForStart);
-                    return;
+                    // Twain Local states
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_BAD_PARAMETER:
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_ERROR_STARTING:
+                        Display("TWAIN Local " + message);
+                        break;
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_SERVER_STARTED:
+                        Display("TWAIN Local is ready for use...");
+                        SetButtons(ButtonState.Started);
+                        break;
+                        // Twain Cloud states
+                        case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_FAILED:
+                        {
+                            if (iConnectionRetries < 10)
+                            {
+                                Display("TWAIN Cloud  " + message);
+                            }
+                        }
+                        iConnectionRetries++;
+                        break;
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_SUCCESS:
+                        Display("TWAIN Cloud is ready for use...");
+                        break;
                 }
-            }
-            catch (Exception exception)
+            });
+            if (!blSuccess)
             {
                 Log.Error("MonitorTasksStart failed...");
-                MessageBox.Show("Failed to start the cloud monitoring, check the logs for more information." + Environment.NewLine + "Error: " + exception.Message, Config.GetResource(m_resourcemanager, "strFormMainTitle"));
+                MessageBox.Show("Failed to start cloud monitoring, check the logs for more information.", Config.GetResource(m_resourcemanager, "strFormMainTitle"));
+                SetButtons(ButtonState.WaitingForStart);
+                return;
             }
-            if (m_scanner.IsTwainLocalStarted())
-            {
-                Display("TWAIN Local is ready for use...");
-            }
-            if (m_scanner.IsTwainCloudStarted())
-            {
-                Display("TWAIN Cloud is ready for use...");
-            }
-
-            // Set buttons...
-            SetButtons(ButtonState.Started);
         }
 
         /// <summary>

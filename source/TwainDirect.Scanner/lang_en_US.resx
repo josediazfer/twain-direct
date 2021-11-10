@@ -129,6 +129,9 @@
   <data name="errNoScannersFound" xml:space="preserve">
     <value>No scanners found.</value>
   </data>
+  <data name="errRegisterCloudScanner" xml:space="preserve">
+    <value>Failed to register the scanner device in the Cloud. Exception message '{0}'</value>
+  </data>
   <data name="errRegisterTwainDriver" xml:space="preserve">
     <value>Do you want to select a TWAIN driver?  If so, please make sure your scanner is powered on and connected, and press YES.</value>
   </data>

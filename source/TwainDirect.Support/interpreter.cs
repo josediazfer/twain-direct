@@ -76,8 +76,8 @@ namespace TwainDirect.Support
                     var handle = NativeMethods.CreateFile
                     (
                         "CONOUT$",
-                        NativeMethods.DesiredAccess.GenericWrite | NativeMethods.DesiredAccess.GenericWrite,
-                        NativeMethods.FileShare.Read | NativeMethods.FileShare.Write,
+                        NativeMethods.DesiredAccess.GenericWrite,
+                        NativeMethods.FileShare.Write,
                         IntPtr.Zero,
                         NativeMethods.CreationDisposition.OpenExisting,
                         NativeMethods.FileAttributes.Normal,

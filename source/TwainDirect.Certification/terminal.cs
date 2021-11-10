@@ -4256,6 +4256,7 @@ namespace TwainDirect.Certification
             if (!m_blSilent || a_blForce)
             {
                 Console.Out.WriteLine(a_szText);
+                Console.Out.Flush();
             }
             if (m_selfcertreport != null)
             {

@@ -92,15 +92,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HazyBits.Twain.Cloud, Version=1.0.0.42, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HazyBits.Twain.Cloud.1.0.42\lib\net452\HazyBits.Twain.Cloud.dll</HintPath>
-    </Reference>
-    <Reference Include="HazyBits.Twain.Cloud.Forms, Version=1.0.0.42, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HazyBits.Twain.Cloud.Forms.1.0.42\lib\net452\HazyBits.Twain.Cloud.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="MQTTnet, Version=2.7.5.0, Culture=neutral, PublicKeyToken=b69712f52770c0a7, processorArchitecture=MSIL">
-      <HintPath>..\packages\MQTTnet.2.7.5\lib\net452\MQTTnet.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -151,6 +142,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud.Forms\HazyBits.Twain.Cloud.Forms.csproj">
+      <Project>{0fbf20be-2155-4e58-abcb-df95dc7ee5a4}</Project>
+      <Name>HazyBits.Twain.Cloud.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud\HazyBits.Twain.Cloud.csproj">
+      <Project>{efd1d5e1-3d88-40f9-842c-ee72b4644061}</Project>
+      <Name>HazyBits.Twain.Cloud</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TwainDirect.Support\TwainDirect.Support.csproj">
       <Project>{50d52482-9c72-45b3-9bcf-1e4b49976e48}</Project>
       <Name>TwainDirect.Support</Name>
