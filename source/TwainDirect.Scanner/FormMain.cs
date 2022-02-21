@@ -63,23 +63,26 @@ namespace TwainDirect.Scanner
             {
                 szCurrentUiCulture = Thread.CurrentThread.CurrentUICulture.ToString();
             }
-            switch (szCurrentUiCulture.ToLower())
+            szCurrentUiCulture = szCurrentUiCulture.ToLower();
+            if (szCurrentUiCulture.EndsWith("-es"))
             {
-                default:
+                Log.Info("UiCulture: " + szCurrentUiCulture);
+                m_resourcemanager = lang_es_ES.ResourceManager;
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("es-ES");
+            }
+            else if(szCurrentUiCulture.EndsWith("-fr"))
+            {
+                Log.Info("UiCulture: " + szCurrentUiCulture);
+                m_resourcemanager = lang_fr_FR.ResourceManager;
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-FR");
+            } else
+            {
+                if (!szCurrentUiCulture.Equals("en-US"))
+                {
                     Log.Info("UiCulture: " + szCurrentUiCulture + " (not supported, so using en-US)");
-                    m_resourcemanager = lang_en_US.ResourceManager;
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-                    break;
-                case "en-us":
-                    Log.Info("UiCulture: " + szCurrentUiCulture);
-                    m_resourcemanager = lang_en_US.ResourceManager;
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-                    break;
-                case "fr-fr":
-                    Log.Info("UiCulture: " + szCurrentUiCulture);
-                    m_resourcemanager = lang_fr_FR.ResourceManager;
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-FR");
-                    break;
+                }
+                m_resourcemanager = lang_en_US.ResourceManager;
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             }
 
             // Confirm scan, we check for the command line (confirmscan)
@@ -908,5 +911,18 @@ namespace TwainDirect.Scanner
         private static bool ms_blSystemShutdown = false;
 
         #endregion
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            if (Config.Get("ConnectOnStartup", "no") == "yes")
+            {
+                BeginInvoke(new MethodInvoker(delegate { m_buttonStart_Click(sender, e); }));
+            }
+        }
+
+        private void m_richtextboxTask_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

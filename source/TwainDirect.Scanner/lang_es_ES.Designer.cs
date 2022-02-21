@@ -22,14 +22,14 @@ namespace TwainDirect.Scanner {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class lang_en_US {
+    public class lang_es_ES {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal lang_en_US() {
+        internal lang_es_ES() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace TwainDirect.Scanner {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TwainDirect.Scanner.lang_en_US", typeof(lang_en_US).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TwainDirect.Scanner.lang_es_ES", typeof(lang_es_ES).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do you want to close the &apos;TWAIN Direct: TWAIN Bridge&apos; program?.
+        ///   Looks up a localized string similar to Quieres cerrar &apos;TWAIN Direct: TWAIN Bridge&apos;?.
         /// </summary>
         public static string errCloseTwainBridge {
             get {
@@ -70,7 +70,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Looking for scanners....
+        ///   Looks up a localized string similar to Localizando escaners....
         /// </summary>
         public static string errLookingForScanners {
             get {
@@ -79,7 +79,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorry, we do not have a cloud manager for this cloud..
+        ///   Looks up a localized string similar to Lo sentimos, no tenemos un administrador de Cloud para este Cloud..
         /// </summary>
         public static string errNoCloudManager {
             get {
@@ -88,7 +88,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No scanners found..
+        ///   Looks up a localized string similar to No se encontraron escaners..
         /// </summary>
         public static string errNoScannersFound {
             get {
@@ -97,7 +97,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to register the scanner device in the Cloud. Exception message &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Fallo al registrar el escaner en el Cloud. Mensaje de error &apos;{0}&apos;.
         /// </summary>
         public static string errRegisterCloudScanner {
             get {
@@ -106,7 +106,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do you want to select a TWAIN driver?  If so, please make sure your scanner is powered on and connected, and press YES..
+        ///   Looks up a localized string similar to Quieres seleccionar un controlador TWAIN?  Si es así, asegurate que este conectado y encendido.
         /// </summary>
         public static string errRegisterTwainDriver {
             get {
@@ -115,7 +115,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We are unable to use the selected scanner.  Please make sure your scanner is turned on and connected before trying again..
+        ///   Looks up a localized string similar to No se pudo usar el escaner seleccionado.  Asegurate que este encendido y conectado.
         /// </summary>
         public static string errUnableToUseScanner {
             get {
@@ -124,7 +124,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Register Cloud....
+        ///   Looks up a localized string similar to Registrar Cloud....
         /// </summary>
         public static string strButtonCloudRegisterEllipsis {
             get {
@@ -133,7 +133,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Manage Cloud....
+        ///   Looks up a localized string similar to Gestionar Cloud....
         /// </summary>
         public static string strButtonManageCloudEllipsis {
             get {
@@ -142,7 +142,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Refresh scanners list.
+        ///   Looks up a localized string similar to Actualizar lista de escaners.
         /// </summary>
         public static string strButtonRefreshScannersList {
             get {
@@ -151,7 +151,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select Scanner....
+        ///   Looks up a localized string similar to Seleccionar escaner....
         /// </summary>
         public static string strButtonRegisterEllipsis {
             get {
@@ -160,7 +160,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Start.
+        ///   Looks up a localized string similar to Iniciar.
         /// </summary>
         public static string strButtonStart {
             get {
@@ -169,7 +169,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stop.
+        ///   Looks up a localized string similar to Parar.
         /// </summary>
         public static string strButtonStop {
             get {
@@ -178,7 +178,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Manage Local....
+        ///   Looks up a localized string similar to Gestión Local....
         /// </summary>
         public static string strButtonTwainLocalManagerEllipsis {
             get {
@@ -187,7 +187,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advertise on TWAIN Local and TWAIN Cloud when this program starts.
+        ///   Looks up a localized string similar to Aviso en TWAIN local y TWAIN Cloud cuando la aplicación se inicia.
         /// </summary>
         public static string strCheckboxAdvertise {
             get {
@@ -196,7 +196,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Prompt for confirmation when scanning starts.
+        ///   Looks up a localized string similar to Enseñar mensaje de confirmación cuando se empieza a escanear.
         /// </summary>
         public static string strCheckboxConfirmation {
             get {
@@ -205,7 +205,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect on startup.
+        ///   Looks up a localized string similar to Conectar al abrir la aplicación.
         /// </summary>
         public static string strCheckboxConnectOnStartup {
             get {
@@ -214,7 +214,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Run this program when you log on.
+        ///   Looks up a localized string similar to Ejecute este programa cuando inicie sesión.
         /// </summary>
         public static string strCheckboxRunOnLogin {
             get {
@@ -223,7 +223,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automatically run &apos;npm start&apos; for twain-cloud-express.
+        ///   Looks up a localized string similar to Automaticamente ejecutar &apos;npm start&apos; para twain-cloud-express.
         /// </summary>
         public static string strCheckboxStartNpm {
             get {
@@ -241,7 +241,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current driver:.
+        ///   Looks up a localized string similar to Controlador:.
         /// </summary>
         public static string strLabelCurrentDriver {
             get {
@@ -250,7 +250,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current note:.
+        ///   Looks up a localized string similar to Nombre:.
         /// </summary>
         public static string strLabelCurrentNote {
             get {
@@ -259,7 +259,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current Cloud Device:.
+        ///   Looks up a localized string similar to Dispositivo Cloud:.
         /// </summary>
         public static string strLabelRegisteredDevice {
             get {
@@ -268,7 +268,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Step 1: Select the TWAIN driver for your scanner..
+        ///   Looks up a localized string similar to Paso 1: Selecciona el controlador de TWAIN para tu escaner..
         /// </summary>
         public static string strLabelStep1 {
             get {
@@ -277,7 +277,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Step 2: Configure your system to support TWAIN Local (optional)..
+        ///   Looks up a localized string similar to Paso  2: Configura tu sistema para soportar TWAIN en local (opcional)..
         /// </summary>
         public static string strLabelStep2 {
             get {
@@ -286,7 +286,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Step 3: Register with TWAIN Cloud (optional)..
+        ///   Looks up a localized string similar to Paso 3: Registrar con TWAIN Cloud (opcional)..
         /// </summary>
         public static string strLabelStep3 {
             get {
@@ -295,7 +295,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;About.
+        ///   Looks up a localized string similar to &amp;Acerca de.
         /// </summary>
         public static string strMenuAbout {
             get {
@@ -313,7 +313,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &amp;Open.
+        ///   Looks up a localized string similar to &amp;Abrir.
         /// </summary>
         public static string strMenuShowConsole {
             get {
@@ -322,7 +322,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select scanner driver:.
+        ///   Looks up a localized string similar to Seleccionar el controlador de escaner:.
         /// </summary>
         public static string strSelectScannerDriver {
             get {
@@ -331,7 +331,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A note or friendly name for your scanner:.
+        ///   Looks up a localized string similar to Una nota o un alias para tu escaner:.
         /// </summary>
         public static string strSetNote {
             get {
@@ -340,7 +340,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A program allowing TWAIN Direct applications to communicate with scanners supported by TWAIN drivers..
+        ///   Looks up a localized string similar to Un programa que permite que las aplicaciones TWAIN Direct se comuniquen con escáneres compatibles con controladores TWAIN..
         /// </summary>
         public static string strTextAbout {
             get {
@@ -349,7 +349,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Current cloud:.
+        ///   Looks up a localized string similar to Cloud seleccionado:.
         /// </summary>
         public static string strTextCurrentCloud {
             get {
@@ -358,7 +358,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Listing registered scanners...(please wait for the list).
+        ///   Looks up a localized string similar to Listado de escáneres registrados... (espere la lista).
         /// </summary>
         public static string strTextListingScannersBegin {
             get {
@@ -367,7 +367,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Listing complete....
+        ///   Looks up a localized string similar to Listado completo....
         /// </summary>
         public static string strTextListingScannersEnd {
             get {
@@ -376,7 +376,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No scanners registered....
+        ///   Looks up a localized string similar to No hay escaners registrados....
         /// </summary>
         public static string strTextNoScannersRegistered {
             get {
@@ -385,7 +385,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to On OK the program will be minimized to the system tray, right-click its icon there to access it. Canceling this dialog will exit..
+        ///   Looks up a localized string similar to En Aceptar, el programa se minimizará en la bandeja del sistema, haga clic con el botón derecho en su icono para acceder a él. Al cancelar este cuadro de diálogo, se cerrará..
         /// </summary>
         public static string strTextNotClosing {
             get {
@@ -394,7 +394,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to start npm.
+        ///   Looks up a localized string similar to Fallo al iniciar &apos;npm&apos;.
         /// </summary>
         public static string strTextNpmFailed {
             get {
@@ -403,7 +403,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Starting &apos;npm start&apos;, we will wait 15 seconds for it to stabilize..
+        ///   Looks up a localized string similar to Iniciando &apos;npm start&apos;, esperaremos 15 minutos a que arranque..
         /// </summary>
         public static string strTextStartNpm {
             get {

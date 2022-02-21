@@ -1,4 +1,6 @@
-﻿namespace TwainDirect.Scanner
+﻿using TwainDirect.Support;
+
+namespace TwainDirect.Scanner
 {
     partial class FormSetup
     {
@@ -46,12 +48,14 @@
             this.m_CloudDevicesComboBox = new System.Windows.Forms.ComboBox();
             this.m_comboboxCloudApiRoot = new System.Windows.Forms.ComboBox();
             this.m_checkboxStartNpm = new System.Windows.Forms.CheckBox();
+            this.m_checkboxConnectOnStartup = new System.Windows.Forms.CheckBox();
+            this.m_buttonCloudRefreshScannersList = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // m_checkboxRunOnLogin
             // 
             this.m_checkboxRunOnLogin.AutoSize = true;
-            this.m_checkboxRunOnLogin.Location = new System.Drawing.Point(12, 313);
+            this.m_checkboxRunOnLogin.Location = new System.Drawing.Point(12, 347);
             this.m_checkboxRunOnLogin.Name = "m_checkboxRunOnLogin";
             this.m_checkboxRunOnLogin.Size = new System.Drawing.Size(187, 17);
             this.m_checkboxRunOnLogin.TabIndex = 70;
@@ -122,7 +126,7 @@
             // m_checkboxAdvertise
             // 
             this.m_checkboxAdvertise.AutoSize = true;
-            this.m_checkboxAdvertise.Location = new System.Drawing.Point(12, 336);
+            this.m_checkboxAdvertise.Location = new System.Drawing.Point(12, 370);
             this.m_checkboxAdvertise.Name = "m_checkboxAdvertise";
             this.m_checkboxAdvertise.Size = new System.Drawing.Size(360, 17);
             this.m_checkboxAdvertise.TabIndex = 74;
@@ -133,7 +137,7 @@
             // m_checkboxConfirmation
             // 
             this.m_checkboxConfirmation.AutoSize = true;
-            this.m_checkboxConfirmation.Location = new System.Drawing.Point(12, 359);
+            this.m_checkboxConfirmation.Location = new System.Drawing.Point(12, 393);
             this.m_checkboxConfirmation.Name = "m_checkboxConfirmation";
             this.m_checkboxConfirmation.Size = new System.Drawing.Size(237, 17);
             this.m_checkboxConfirmation.TabIndex = 75;
@@ -158,7 +162,7 @@
             this.m_textboxCurrentDriver.Location = new System.Drawing.Point(91, 29);
             this.m_textboxCurrentDriver.Name = "m_textboxCurrentDriver";
             this.m_textboxCurrentDriver.ReadOnly = true;
-            this.m_textboxCurrentDriver.Size = new System.Drawing.Size(447, 20);
+            this.m_textboxCurrentDriver.Size = new System.Drawing.Size(448, 20);
             this.m_textboxCurrentDriver.TabIndex = 77;
             // 
             // m_textboxCurrentNote
@@ -169,7 +173,7 @@
             this.m_textboxCurrentNote.Location = new System.Drawing.Point(91, 55);
             this.m_textboxCurrentNote.Name = "m_textboxCurrentNote";
             this.m_textboxCurrentNote.ReadOnly = true;
-            this.m_textboxCurrentNote.Size = new System.Drawing.Size(447, 20);
+            this.m_textboxCurrentNote.Size = new System.Drawing.Size(448, 20);
             this.m_textboxCurrentNote.TabIndex = 79;
             // 
             // m_labelCurrentNote
@@ -195,7 +199,7 @@
             // m_RegisteredDeviceLabel
             // 
             this.m_RegisteredDeviceLabel.AutoSize = true;
-            this.m_RegisteredDeviceLabel.Location = new System.Drawing.Point(46, 239);
+            this.m_RegisteredDeviceLabel.Location = new System.Drawing.Point(46, 268);
             this.m_RegisteredDeviceLabel.Name = "m_RegisteredDeviceLabel";
             this.m_RegisteredDeviceLabel.Size = new System.Drawing.Size(111, 13);
             this.m_RegisteredDeviceLabel.TabIndex = 81;
@@ -207,9 +211,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.m_CloudDevicesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.m_CloudDevicesComboBox.FormattingEnabled = true;
-            this.m_CloudDevicesComboBox.Location = new System.Drawing.Point(163, 236);
+            this.m_CloudDevicesComboBox.Location = new System.Drawing.Point(163, 265);
             this.m_CloudDevicesComboBox.Name = "m_CloudDevicesComboBox";
-            this.m_CloudDevicesComboBox.Size = new System.Drawing.Size(375, 21);
+            this.m_CloudDevicesComboBox.Size = new System.Drawing.Size(376, 21);
             this.m_CloudDevicesComboBox.TabIndex = 82;
             this.m_CloudDevicesComboBox.DropDown += new System.EventHandler(this.m_CloudDevicesComboBox_DropDown);
             this.m_CloudDevicesComboBox.SelectedIndexChanged += new System.EventHandler(this.m_CloudDevicesComboBox_SelectedIndexChanged);
@@ -226,19 +230,42 @@
             // m_checkboxStartNpm
             // 
             this.m_checkboxStartNpm.AutoSize = true;
-            this.m_checkboxStartNpm.Location = new System.Drawing.Point(49, 266);
+            this.m_checkboxStartNpm.Location = new System.Drawing.Point(49, 295);
             this.m_checkboxStartNpm.Name = "m_checkboxStartNpm";
-            this.m_checkboxStartNpm.Size = new System.Drawing.Size(189, 17);
+            this.m_checkboxStartNpm.Size = new System.Drawing.Size(267, 17);
             this.m_checkboxStartNpm.TabIndex = 84;
             this.m_checkboxStartNpm.Text = "Automatically run \'npm start\' for twain-cloud-express";
             this.m_checkboxStartNpm.UseVisualStyleBackColor = true;
+            // 
+            // m_checkboxConnectOnStartup
+            // 
+            this.m_checkboxConnectOnStartup.AutoSize = true;
+            this.m_checkboxConnectOnStartup.Location = new System.Drawing.Point(12, 324);
+            this.m_checkboxConnectOnStartup.Name = "m_checkboxConnectOnStartup";
+            this.m_checkboxConnectOnStartup.Size = new System.Drawing.Size(116, 17);
+            this.m_checkboxConnectOnStartup.TabIndex = 85;
+            this.m_checkboxConnectOnStartup.Text = "Connect on startup";
+            this.m_checkboxConnectOnStartup.UseVisualStyleBackColor = true;
+            // 
+            // m_buttonCloudRefreshScannersList
+            // 
+            this.m_buttonCloudRefreshScannersList.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.m_buttonCloudRefreshScannersList.Location = new System.Drawing.Point(249, 236);
+            this.m_buttonCloudRefreshScannersList.Name = "m_buttonCloudRefreshScannersList";
+            this.m_buttonCloudRefreshScannersList.Size = new System.Drawing.Size(142, 23);
+            this.m_buttonCloudRefreshScannersList.TabIndex = 86;
+            this.m_buttonCloudRefreshScannersList.Text = "refresh scanners list";
+            this.m_buttonCloudRefreshScannersList.UseVisualStyleBackColor = true;
+            this.m_buttonCloudRefreshScannersList.Click += new System.EventHandler(this.m_buttonCloudRefreshScannersList_Click);
             // 
             // FormSetup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(550, 388);
+            this.ClientSize = new System.Drawing.Size(551, 436);
+            this.Controls.Add(this.m_buttonCloudRefreshScannersList);
+            this.Controls.Add(this.m_checkboxConnectOnStartup);
             this.Controls.Add(this.m_checkboxStartNpm);
             this.Controls.Add(this.m_comboboxCloudApiRoot);
             this.Controls.Add(this.m_CloudDevicesComboBox);
@@ -259,6 +286,7 @@
             this.Controls.Add(this.m_buttonRegister);
             this.Name = "FormSetup";
             this.Text = "FormSetup";
+            this.Load += new System.EventHandler(this.FormSetup_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -284,5 +312,7 @@
         private System.Windows.Forms.ComboBox m_CloudDevicesComboBox;
         private System.Windows.Forms.ComboBox m_comboboxCloudApiRoot;
         private System.Windows.Forms.CheckBox m_checkboxStartNpm;
+        private System.Windows.Forms.CheckBox m_checkboxConnectOnStartup;
+        private System.Windows.Forms.Button m_buttonCloudRefreshScannersList;
     }
 }

@@ -131,6 +131,11 @@
     <Compile Include="FormSetup.Designer.cs">
       <DependentUpon>FormSetup.cs</DependentUpon>
     </Compile>
+    <Compile Include="lang_es_ES.Designer.cs">
+      <DependentUpon>lang_es_ES.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="lang_en_US.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -165,9 +170,15 @@
     <EmbeddedResource Include="FormSetup.resx">
       <DependentUpon>FormSetup.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="lang_es_ES.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>lang_es_ES.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

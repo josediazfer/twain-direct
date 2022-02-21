@@ -1,4 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using HazyBits.Twain.Cloud.Client;
+using HazyBits.Twain.Cloud.Forms;
+using HazyBits.Twain.Cloud.Application;
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -33,6 +36,8 @@ namespace TwainDirect.Scanner
             bool a_blConfirmScan
         )
         {
+            m_resourcemanager = a_resourcemanager;
+
             // Init the component...
             InitializeComponent();
             this.MinimizeBox = false;
@@ -59,7 +64,6 @@ namespace TwainDirect.Scanner
 
             // Remember stuff...
             m_formmain = a_formmain;
-            m_resourcemanager = a_resourcemanager;
             m_scanner = a_scanner;
             m_checkboxConfirmation.Checked = a_blConfirmScan;
 
@@ -69,9 +73,18 @@ namespace TwainDirect.Scanner
             m_buttonCloudRegister.Text = Config.GetResource(m_resourcemanager, "strButtonCloudRegisterEllipsis"); // Register Cloud...
             m_buttonManageCloud.Text = Config.GetResource(m_resourcemanager, "strButtonManageCloudEllipsis"); // Manage Cloud...
             m_buttonRegister.Text = Config.GetResource(m_resourcemanager, "strButtonRegisterEllipsis"); // Register...
+            m_buttonCloudRefreshScannersList.Text = Config.GetResource(m_resourcemanager, "strButtonRefreshScannersList"); // Refresh Cloud scanners list
             m_checkboxRunOnLogin.Text = Config.GetResource(m_resourcemanager, "strCheckboxRunOnLogin"); // Run on login
             m_labelCurrentDriver.Text = Config.GetResource(m_resourcemanager, "strLabelCurrentDriver"); // Current Driver:
             m_labelCurrentNote.Text = Config.GetResource(m_resourcemanager, "strLabelCurrentNote"); // Current Note:
+            m_labelStep1.Text = Config.GetResource(m_resourcemanager, "strLabelStep1"); // "Step 1: Select the TWAIN driver for your scanner.";
+            m_labelStep2.Text = Config.GetResource(m_resourcemanager, "strLabelStep2"); // "Step 2: Configure your system to support TWAIN Local (optional).";
+            m_labelStep3.Text = Config.GetResource(m_resourcemanager, "strLabelStep3"); // "Step 3: Register with TWAIN Cloud (optional).";
+            m_checkboxAdvertise.Text = Config.GetResource(m_resourcemanager, "strCheckboxAdvertise"); //"Advertise on TWAIN Local and TWAIN Cloud when this program starts";
+            m_checkboxConfirmation.Text = Config.GetResource(m_resourcemanager, "strCheckboxConfirmation"); //""Prompt for confirmation when scanning starts";
+            m_RegisteredDeviceLabel.Text = Config.GetResource(m_resourcemanager, "strLabelRegisteredDevice"); // "Current Cloud Device:";
+            m_checkboxStartNpm.Text = Config.GetResource(m_resourcemanager, "strCheckboxStartNpm"); // "Automatically run \'npm start\' for twain-cloud-express";
+            m_checkboxConnectOnStartup.Text = Config.GetResource(m_resourcemanager, "strCheckboxConnectOnStartup"); // "Connect on startup";
 
             // Set stuff...
             m_textboxCurrentDriver.Text = m_formmain.GetTwainLocalTy();
@@ -128,7 +141,8 @@ namespace TwainDirect.Scanner
             }
 
             // Okay, we can let this happen now...
-            m_blSkipUpdatingTheRegistry = false;
+            m_blSkipUpdatingTheRegistry = false;           
+            m_checkboxConnectOnStartup.Checked = Config.Get("ConnectOnStartup", "no") == "yes";
         }
 
         /// <summary>
@@ -626,5 +640,95 @@ namespace TwainDirect.Scanner
         TwainLocalScannerDevice.DisplayCallback m_displaycallback;
 
         #endregion
+
+        private void FormSetup_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Event callback...
+        /// </summary>
+        /// <param name="a_object"></param>
+        /// <param name="a_szEvent"></param>
+        private void EventCallback(object a_object, string a_szEvent)
+        { /*
+                switch (a_szEvent)
+                {
+                    // Don't recognize it...
+                    default:
+                        BeginInvoke(new MethodInvoker(UpdateSummary));
+                        break;
+
+                    // Image blocks have been updated...
+                    case "imageBlocks":
+                        BeginInvoke(new MethodInvoker(UpdateSummary));
+                        break;
+
+                    // We've lost our session
+                    case "critical":
+                        BeginInvoke(new MethodInvoker(Critical));
+                        break;
+
+                    // We've lost our session
+                    case "sessionTimedOut":
+                        BeginInvoke(new MethodInvoker(SessionTimedOut));
+                        break;
+                }
+            }*/
+        }
+
+        private void m_buttonCloudRefreshScannersList_Click(object sender, EventArgs e)
+        {
+            var apiRoot = CloudManager.GetCloudApiRoot();
+            var client = new TwainCloudClient(apiRoot);
+            var applicationManager = new ApplicationManager(client);
+
+
+            applicationManager.GetSignin().ContinueWith(signinTask =>
+            {
+                var signinResponse = signinTask.Result;
+                Invoke(new MethodInvoker(delegate ()
+                { 
+                    FacebookLoginForm loginForm = new FacebookLoginForm(signinResponse.Url);
+
+                    loginForm.Authorized += async (_, args) =>
+                    {
+                        applicationManager = new ApplicationManager(new TwainCloudClient(apiRoot, args.Tokens));
+                        
+                        loginForm.Close();
+                        await applicationManager.GetScanners().ContinueWith(scannersTask =>
+                         {
+                             var scannersCloud = scannersTask.Result;
+                             var context = new CloudContext();
+                             var scannersDb = context.Scanners.ToArray();
+
+                             foreach (var scannerDb in scannersDb)
+                             {
+                                 Boolean hasScanner = false;
+
+                                 foreach (var scannerCloud in scannersCloud)
+                                 {
+                                     if (scannerDb.Id == scannerCloud.Id)
+                                     {
+                                         hasScanner = true;
+                                         break;
+                                     }
+                                 }
+                                 if (!hasScanner)
+                                 {
+                                     context.Entry(scannerDb).State = System.Data.Entity.EntityState.Deleted;
+                                 }
+                             }
+                             context.SaveChanges();
+                             BeginInvoke(new MethodInvoker(delegate() { LoadRegisteredCloudDevices(); }));
+                         });
+                    };
+                    Config.ChangeInternetExplorerVersion();
+                    loginForm.Text = m_buttonCloudRefreshScannersList.Text;
+                    loginForm.ShowDialog();
+                }));
+            });
+        }
     }
 }

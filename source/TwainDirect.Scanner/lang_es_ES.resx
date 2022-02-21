@@ -118,89 +118,89 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="errCloseTwainBridge" xml:space="preserve">
-    <value>Do you want to close the 'TWAIN Direct: TWAIN Bridge' program?</value>
+    <value>Quieres cerrar 'TWAIN Direct: TWAIN Bridge'?</value>
   </data>
   <data name="errLookingForScanners" xml:space="preserve">
-    <value>Looking for scanners...</value>
+    <value>Localizando escaners...</value>
   </data>
   <data name="errNoCloudManager" xml:space="preserve">
-    <value>Sorry, we do not have a cloud manager for this cloud.</value>
+    <value>Lo sentimos, no tenemos un administrador de Cloud para este Cloud.</value>
   </data>
   <data name="errNoScannersFound" xml:space="preserve">
-    <value>No scanners found.</value>
+    <value>No se encontraron escaners.</value>
   </data>
   <data name="errRegisterCloudScanner" xml:space="preserve">
-    <value>Failed to register the scanner device in the Cloud. Exception message '{0}'</value>
+    <value>Fallo al registrar el escaner en el Cloud. Mensaje de error '{0}'</value>
   </data>
   <data name="errRegisterTwainDriver" xml:space="preserve">
-    <value>Do you want to select a TWAIN driver?  If so, please make sure your scanner is powered on and connected, and press YES.</value>
+    <value>Quieres seleccionar un controlador TWAIN?  Si es así, asegurate que este conectado y encendido</value>
   </data>
   <data name="errUnableToUseScanner" xml:space="preserve">
-    <value>We are unable to use the selected scanner.  Please make sure your scanner is turned on and connected before trying again.</value>
+    <value>No se pudo usar el escaner seleccionado.  Asegurate que este encendido y conectado</value>
   </data>
   <data name="strButtonCloudRegisterEllipsis" xml:space="preserve">
-    <value>Register Cloud...</value>
+    <value>Registrar Cloud...</value>
   </data>
   <data name="strButtonManageCloudEllipsis" xml:space="preserve">
-    <value>Manage Cloud...</value>
+    <value>Gestionar Cloud...</value>
   </data>
   <data name="strButtonRefreshScannersList" xml:space="preserve">
-    <value>Refresh scanners list</value>
+    <value>Actualizar lista de escaners</value>
   </data>
   <data name="strButtonRegisterEllipsis" xml:space="preserve">
-    <value>Select Scanner...</value>
+    <value>Seleccionar escaner...</value>
     <comment>Pick a new TWAIN Driver...</comment>
   </data>
   <data name="strButtonStart" xml:space="preserve">
-    <value>Start</value>
+    <value>Iniciar</value>
     <comment>Start server...</comment>
   </data>
   <data name="strButtonStop" xml:space="preserve">
-    <value>Stop</value>
+    <value>Parar</value>
     <comment>Stop server...</comment>
   </data>
   <data name="strButtonTwainLocalManagerEllipsis" xml:space="preserve">
-    <value>Manage Local...</value>
+    <value>Gestión Local...</value>
   </data>
   <data name="strCheckboxAdvertise" xml:space="preserve">
-    <value>Advertise on TWAIN Local and TWAIN Cloud when this program starts</value>
+    <value>Aviso en TWAIN local y TWAIN Cloud cuando la aplicación se inicia</value>
   </data>
   <data name="strCheckboxConfirmation" xml:space="preserve">
-    <value>Prompt for confirmation when scanning starts</value>
+    <value>Enseñar mensaje de confirmación cuando se empieza a escanear</value>
   </data>
   <data name="strCheckboxConnectOnStartup" xml:space="preserve">
-    <value>Connect on startup</value>
+    <value>Conectar al abrir la aplicación</value>
   </data>
   <data name="strCheckboxRunOnLogin" xml:space="preserve">
-    <value>Run this program when you log on</value>
+    <value>Ejecute este programa cuando inicie sesión</value>
   </data>
   <data name="strCheckboxStartNpm" xml:space="preserve">
-    <value>Automatically run 'npm start' for twain-cloud-express</value>
+    <value>Automaticamente ejecutar 'npm start' para twain-cloud-express</value>
   </data>
   <data name="strFormMainTitle" xml:space="preserve">
     <value>TWAIN Direct: TWAIN Bridge</value>
     <comment>Main Form title...</comment>
   </data>
   <data name="strLabelCurrentDriver" xml:space="preserve">
-    <value>Current driver:</value>
+    <value>Controlador:</value>
   </data>
   <data name="strLabelCurrentNote" xml:space="preserve">
-    <value>Current note:</value>
+    <value>Nombre:</value>
   </data>
   <data name="strLabelRegisteredDevice" xml:space="preserve">
-    <value>Current Cloud Device:</value>
+    <value>Dispositivo Cloud:</value>
   </data>
   <data name="strLabelStep1" xml:space="preserve">
-    <value>Step 1: Select the TWAIN driver for your scanner.</value>
+    <value>Paso 1: Selecciona el controlador de TWAIN para tu escaner.</value>
   </data>
   <data name="strLabelStep2" xml:space="preserve">
-    <value>Step 2: Configure your system to support TWAIN Local (optional).</value>
+    <value>Paso  2: Configura tu sistema para soportar TWAIN en local (opcional).</value>
   </data>
   <data name="strLabelStep3" xml:space="preserve">
-    <value>Step 3: Register with TWAIN Cloud (optional).</value>
+    <value>Paso 3: Registrar con TWAIN Cloud (opcional).</value>
   </data>
   <data name="strMenuAbout" xml:space="preserve">
-    <value>&amp;About</value>
+    <value>&amp;Acerca de</value>
     <comment>Information about this program...</comment>
   </data>
   <data name="strMenuExit" xml:space="preserve">
@@ -208,42 +208,42 @@
     <comment>Exit the program...</comment>
   </data>
   <data name="strMenuShowConsole" xml:space="preserve">
-    <value>&amp;Open</value>
+    <value>&amp;Abrir</value>
     <comment>Raise the server console window...</comment>
   </data>
   <data name="strSelectScannerDriver" xml:space="preserve">
-    <value>Select scanner driver:</value>
+    <value>Seleccionar el controlador de escaner:</value>
   </data>
   <data name="strSetNote" xml:space="preserve">
-    <value>A note or friendly name for your scanner:</value>
+    <value>Una nota o un alias para tu escaner:</value>
   </data>
   <data name="strTextAbout" xml:space="preserve">
-    <value>A program allowing TWAIN Direct applications to communicate with scanners supported by TWAIN drivers.</value>
+    <value>Un programa que permite que las aplicaciones TWAIN Direct se comuniquen con escáneres compatibles con controladores TWAIN.</value>
     <comment>Information about this program...</comment>
   </data>
   <data name="strTextCurrentCloud" xml:space="preserve">
-    <value>Current cloud:</value>
+    <value>Cloud seleccionado:</value>
     <comment>URI of the current cloud</comment>
   </data>
   <data name="strTextListingScannersBegin" xml:space="preserve">
-    <value>Listing registered scanners...(please wait for the list)</value>
+    <value>Listado de escáneres registrados... (espere la lista)</value>
     <comment>Notice that listing is starting...</comment>
   </data>
   <data name="strTextListingScannersEnd" xml:space="preserve">
-    <value>Listing complete...</value>
+    <value>Listado completo...</value>
     <comment>Notice that listing is done...</comment>
   </data>
   <data name="strTextNoScannersRegistered" xml:space="preserve">
-    <value>No scanners registered...</value>
+    <value>No hay escaners registrados...</value>
     <comment>Couldn't find any scanners...</comment>
   </data>
   <data name="strTextNotClosing" xml:space="preserve">
-    <value>On OK the program will be minimized to the system tray, right-click its icon there to access it. Canceling this dialog will exit.</value>
+    <value>En Aceptar, el programa se minimizará en la bandeja del sistema, haga clic con el botón derecho en su icono para acceder a él. Al cancelar este cuadro de diálogo, se cerrará.</value>
   </data>
   <data name="strTextNpmFailed" xml:space="preserve">
-    <value>Failed to start npm</value>
+    <value>Fallo al iniciar 'npm'</value>
   </data>
   <data name="strTextStartNpm" xml:space="preserve">
-    <value>Starting 'npm start', we will wait 15 seconds for it to stabilize.</value>
+    <value>Iniciando 'npm start', esperaremos 15 minutos a que arranque.</value>
   </data>
 </root>

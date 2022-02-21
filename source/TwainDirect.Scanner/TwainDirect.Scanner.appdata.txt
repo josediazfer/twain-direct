@@ -1,0 +1,146 @@
+{
+    "comment": [
+        "******************************************************************************",
+        "copy or rename this file to TwainDirect.Scanner.appdata.txt in the same folder",
+        "as the TwainDirect.Scanner.exe, and remove the leading X from any lines you want",
+        "to use."
+    ],
+
+
+
+    "commentLogLevel": [
+        "******************************************************************************",
+        "default: 0",
+        "0 - only errors are reported",
+        "these values are bits, add them together as needed, for instance, to get",
+        "all logging data flushed to disk, use a value of 7",
+        "1 - log informational messages",
+        "2 - log verbose stuff, like HTML headers",
+        "4 - flush to disk, use to help diagnose crashes"
+    ],
+    "XlogLevel": 3,
+
+
+
+    "commentLanguage": [
+        "******************************************************************************",
+        "default: en-US",
+        "valid values are language-country, if not supported the code uses en-US"
+    ],
+    "Xlanguage": "en-US",
+
+
+
+    "commentDelayTwainDirectScanner": [
+        "******************************************************************************",
+        "default: 0",
+        "for developers, pauses TwainDirect.Scanner.exe for # milliseconds to allow",
+        "time to attach a debugger"
+    ],
+    "XdelayTwainDirectScanner": 0,
+
+
+
+    "commentImageBlockSize": [
+        "******************************************************************************",
+        "default: 0",
+        "set the maximum data in an imageBlock, any value less that 8192 let's the",
+        "program pick the size; use this to force the creation of multiple imageBlock",
+        "for an image."
+    ],
+    "XimageBlockSize": 65536,
+
+
+
+    "commentSessionTimeout": [
+        "******************************************************************************",
+        "default: 300000 (5 minutes)",
+        "milliseconds before an idle session times out"
+    ],
+    "sessionTimeout": 10000,
+
+
+    "commentUseHttps": [
+        "******************************************************************************",
+        "default: yes",
+        "changing this to 'no' requires changing the URLACL setting too",
+        "no - http only",
+        "yes - https only"
+    ],
+    "XuseHttps": "yes",
+
+    "commentConnectOnStartup": [
+        "******************************************************************************",
+        "default: no",
+        "changing this to 'no' requires changing the URLACL setting too",
+        "no - http only",
+        "yes - https only"
+    ],
+    "XConnectOnStartup": "no",
+    "XConnectOnStartup": "yes",
+
+
+    "commentUseImageBlocksComplete": [
+        "******************************************************************************",
+        "default: yes",
+        "changing this to 'no' resets TwainDirect.Scanner to behavior prior to TWAIN",
+        "Direct 1.2; the scanner doesn't help as much when it comes to figuring out",
+        "how to reassemble imageBlocks into images",
+        "no - imageBlocksNum and imageBlocksComplete are NOT in the session object",
+        "yes - imageBlocksNum and imageBlocksComplete are included in the session object"
+    ],
+    "XuseImageBlocksComplete": "yes",
+
+
+
+    "commentUsePort": [
+        "default: 34034",
+        "port number for the bridge to use for TWAIN Local; changing this requires",
+        "changing the URLACL setting too."
+    ],
+    "XusePort": 34034,
+
+
+
+    "commentCloudApiRoot": [
+        "******************************************************************************",
+        "default: https://api-twain.hazybits.com/dev",
+        "Add one or more cloud api root paths for the user to select from.",
+        " ",
+        "available fields:",
+        "  name - friendly name to show the user in dropdowns",
+        "  url - endpoint for talking to the cloud",
+        "  manage - web page to bring up for managing this cloud",
+        "  signin - authentication to use",
+        "  folderName - name under Twain.Scanner where we keep data for this cloud",
+        "  useHttps - default is 'yes', specify 'no' if using twain-cloud-express",
+        " ",
+        "If using twain-cloud-express, copy the following lines down into cloudApiRoot",
+        "as the first item in the array of objects (just after the '[').",
+        " ",
+        "If you fill in twainCloudExpressFolder with the full path (using forward",
+        "slashes) to your twain-cloud-express folder, the bridge will start npm i",
+        "for you when you register or manage your local cloud.",
+        "***BEGIN STARTING FROM THE NEXT LINE***",
+        {
+            "name": "Local Cloud",
+            "url": "http://localhost:3000/api",
+            "manager": "http://localhost:3000",
+            "signin": "google",
+            "folderName": "localcloud",
+            "useHttps": "no",
+            "twainCloudExpressFolder": ""
+        },
+        "***DO NOT COPY THIS LINE***"
+    ],
+    "cloudApiRoot": [
+        {
+            "name": "TAO Cloud",
+            "url": "http://127.0.0.1:18080/TAOTwainDirectCloud/api",
+            "manager": "http://127.0.0.1:18080/TAOTwainDirectCloud/",
+            "signin": "google",
+            "folderName": "taocloud",
+            "useHttps": "no"
+        }
+    ]
+}

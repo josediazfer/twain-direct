@@ -1,0 +1,99 @@
+{
+    "comment": [
+        "******************************************************************************",
+        "copy or rename this file to TwainDirect.OnTwain.appdata.txt in the same folder",
+        "as the TwainDirect.OnTwain.exe, and remove the leading X from any lines you want",
+        "to use."
+    ],
+
+
+
+    "commentLogLevel": [
+        "******************************************************************************",
+        "default: 0",
+        "0 - only errors are reported",
+        "these values are bits, add them together as needed, for instance, to get",
+        "all logging data flushed to disk, use a value of 7",
+        "1 - log informational messages",
+        "2 - log verbose stuff, like HTML headers",
+        "4 - flush to disk, use to help diagnose crashes"
+    ],
+    "XlogLevel": 3,
+
+
+
+    "commentDelayTwainDirectOnTwain": [
+        "******************************************************************************",
+        "default: 0",
+        "for developers, pauses TwainDirect.OnTwain.exe for # milliseconds to allow",
+        "time to attach a debugger"
+    ],
+    "XdelayTwainDirectOnTwain": 0,
+
+
+
+    "commentUseDatTwaindirect": [
+        "******************************************************************************",
+        "default: yes",
+        "yes - if TWAIN Driver's registry.txt reports twainDirectSupport as Driver",
+        "      then let the TWAIN Driver process TWAIN Direct tasks, and create the",
+        "      metadata and PDF/raster images",
+        "no - the TWAIN Bridge processes TWAIN Direct tasks, creates the metadata",
+        "     and the PDF/raster images."
+    ],
+    "XuseDatTwaindirect": "yes",
+
+
+
+    "commentUseCapIndicators": [
+        "******************************************************************************",
+        "default: true",
+        "true - do NOT show the TWAIN Drivers UI when scanning",
+        "false - show the TWAIN Drivers UI"
+    ],
+    "XuseCapIndicators": false,
+
+
+
+    "commentIcapXfermech": [
+        "******************************************************************************",
+        "default: driver-TWSX_MEMFILE, extended-TWSX_MEMORY, basic-TWSX_NATIVE",
+        "You can override extended to use TWSX_FILE, otherwise changing this is unwise."
+    ],
+    "XicapXfermech": "TWSX_FILE",
+
+
+
+    "commentPfxFile": [
+        "******************************************************************************",
+        "default: certificate.p12 in same folder as TwainDirect.OnTwain.exe",
+        "specify the full path to the certificate to use; if the leading X is removed",
+        "from XpfxFilepath, but the value is an empty string then digital signing is",
+        "turned off."
+    ],
+    "XpfxFile": "",
+
+
+
+    "commentEncryptionProfiles": [
+        "******************************************************************************",
+        "supported encryptionProfiles, this is an array of profiles that can be",
+        "referenced by TWAIN Direct tasks."
+    ],
+    "encryptionProfiles": [
+        {
+            "name": "password",
+            "profile": "Password",
+            "type": "password",
+            "passwordUser": "open",
+            "passwordOwner": "edit"
+        },
+        {
+            "name": "public key",
+            "profile": "Public Key",
+            "type": "publicKey",
+            "publicKeyType": "aes256",
+            "publicKey": "full path to .pem file containing the public key"
+        }
+    ]
+}

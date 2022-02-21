@@ -82,6 +82,7 @@
             this.m_richtextboxTask.Size = new System.Drawing.Size(598, 266);
             this.m_richtextboxTask.TabIndex = 61;
             this.m_richtextboxTask.Text = "";
+            this.m_richtextboxTask.TextChanged += new System.EventHandler(this.m_richtextboxTask_TextChanged);
             // 
             // m_notifyicon
             // 
@@ -129,6 +130,7 @@
             this.MinimumSize = new System.Drawing.Size(383, 274);
             this.Name = "FormMain";
             this.Text = "TWAIN Direct: Scanner";
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
