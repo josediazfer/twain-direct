@@ -616,23 +616,25 @@ namespace TwainDirect.OnTwain
                         // matches the experience one should get with C/C++...
                         string szStatus = "";
                         TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
-                        m_twain.CsvToCapability(ref twcapability, ref szStatus, a_szTwmemref);
-                        sts = m_twain.DatCapability((TWAIN.DG)iDg, (TWAIN.MSG)iMsg, ref twcapability);
-                        if ((sts == TWAIN.STS.SUCCESS) || (sts == TWAIN.STS.CHECKSTATUS))
+                        if (m_twain.CsvToCapability(ref twcapability, ref szStatus, a_szTwmemref))
                         {
-                            // Convert the data to CSV...
-                            a_szTwmemref = m_twain.CapabilityToCsv(twcapability, ((TWAIN.MSG)iMsg != TWAIN.MSG.QUERYSUPPORT));
-                            // Free the handle if the driver created it...
-                            switch ((TWAIN.MSG)iMsg)
+                            sts = m_twain.DatCapability((TWAIN.DG)iDg, (TWAIN.MSG)iMsg, ref twcapability);
+                            if ((sts == TWAIN.STS.SUCCESS) || (sts == TWAIN.STS.CHECKSTATUS))
                             {
-                                default: break;
-                                case TWAIN.MSG.GET:
-                                case TWAIN.MSG.GETCURRENT:
-                                case TWAIN.MSG.GETDEFAULT:
-                                case TWAIN.MSG.QUERYSUPPORT:
-                                case TWAIN.MSG.RESET:
-                                    m_twain.DsmMemFree(ref twcapability.hContainer);
-                                    break;
+                                // Convert the data to CSV...
+                                a_szTwmemref = m_twain.CapabilityToCsv(twcapability, ((TWAIN.MSG)iMsg != TWAIN.MSG.QUERYSUPPORT));
+                                // Free the handle if the driver created it...
+                                switch ((TWAIN.MSG)iMsg)
+                                {
+                                    default: break;
+                                    case TWAIN.MSG.GET:
+                                    case TWAIN.MSG.GETCURRENT:
+                                    case TWAIN.MSG.GETDEFAULT:
+                                    case TWAIN.MSG.QUERYSUPPORT:
+                                    case TWAIN.MSG.RESET:
+                                        m_twain.DsmMemFree(ref twcapability.hContainer);
+                                        break;
+                                }
                             }
                         }
                     }
@@ -2646,6 +2648,33 @@ namespace TwainDirect.OnTwain
         }
 
         /// <summary>
+        /// Set custom capabilites defined by user...
+        /// </summary>
+        private void SetCustomCapabilities()
+        {
+            for (int i = 0; i < c_maxCapCustom && Config.Get("capCustom[" + i + "]", "") != ""; i++)
+            {
+                string szCapability = Config.Get("capCustom[" + i + "]", "");
+                string szStatus = "";
+                TWAIN.STS sts;
+
+                sts = Send("DG_CONTROL", "DAT_CAPABILITY", "MSG_SET", ref szCapability, ref szStatus);
+                if (sts == TWAIN.STS.BADPROTOCOL)
+                {
+                    TWAINWorkingGroup.Log.Error("Action: invalid custom capability " + szCapability);
+                }
+                else if (sts != TWAIN.STS.SUCCESS)
+                {
+                    TWAINWorkingGroup.Log.Error("Action: we can't set custom capability " + szCapability);
+                }
+                else
+                {
+                    TWAINWorkingGroup.Log.Info("Set custom capability successfully " + szCapability);
+                }
+            }
+        }
+
+        /// <summary>
         /// Start scanning...
         /// </summary>
         /// <param name="a_szSession">the session data</param>
@@ -2748,6 +2777,8 @@ namespace TwainDirect.OnTwain
                         TWAINWorkingGroup.Log.Warn("Action: we can't set DAT_SETUPFILEXFER to TWFF_PDFRASTER");
                         return (TwainLocalScanner.ApiStatus.invalidCapturingOptions);
                     }
+                    // Set custom capabilities defined by user
+                    SetCustomCapabilities();
                 }
 
                 // Otherwise we're going to do most of the work ourselves...
@@ -2814,6 +2845,8 @@ namespace TwainDirect.OnTwain
                             }
                         }
                     }
+                    // Set custom capabilities defined by user
+                    SetCustomCapabilities();
                 }
             }
 
@@ -2909,6 +2942,11 @@ namespace TwainDirect.OnTwain
         private TWAIN.TWSX m_twsxXferMech;
         private TWAIN.TW_SETUPMEMXFER m_twsetupmemxfer;
         private const int c_iDefaultAllocBlockSize = 10 * 1024 * 1024;
+
+        /// <summary>
+        /// Maximum custom capabilities to read from the configuration...
+        /// </summary>
+        private const int c_maxCapCustom = 50;
 
         /// <summary>
         /// Information about the scanner sent to use by createSession...

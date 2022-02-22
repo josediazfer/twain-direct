@@ -1844,9 +1844,38 @@ namespace TwainDirect.OnTwain
                     }
                 }
             }
+            // Set custom capabilities defined by user
+            SetCustomCapabilities();
 
             // Life is good...
             return (true);
+        }
+
+        /// <summary>
+        /// Set custom capabilites defined by user...
+        /// </summary>
+        private void SetCustomCapabilities()
+        {
+            for (int i = 0; i < c_maxCapCustom && Config.Get("capCustom[" + i + "]", "") != ""; i++)
+            {
+                string szCapability = Config.Get("capCustom[" + i + "]", "");
+                string szStatus = "";
+                TWAIN.STS sts;
+
+                sts = m_twain.Send("DG_CONTROL", "DAT_CAPABILITY", "MSG_SET", ref szCapability, ref szStatus);
+                if (sts == TWAIN.STS.BADPROTOCOL)
+                {
+                    TWAINWorkingGroup.Log.Error("Action: invalid custom capability " + szCapability);
+                }
+                else if (sts != TWAIN.STS.SUCCESS)
+                {
+                    TWAINWorkingGroup.Log.Error("Action: we can't set custom capability " + szCapability);
+                }
+                else
+                {
+                    TWAINWorkingGroup.Log.Info("Set custom capability successfully " + szCapability);
+                }
+            }
         }
 
         /// <summary>
@@ -4518,7 +4547,9 @@ namespace TwainDirect.OnTwain
             //CAP_INDICATORSMODE,
             //CAP_UICONTROLLABLE,
             //CAP_SERIALNUMBER,
-            //ICAP_LAMPSTATE,
+            //ICAP_LAMPCAP_INDICATORS
+            //
+            //STATE,
             //CAP_BATTERYMINUTES,
             //CAP_BATTERYPERCENTAGE,
             //CAP_POWERSUPPLY,
@@ -9619,13 +9650,18 @@ namespace TwainDirect.OnTwain
                 private string m_szVendor;
             }
 
-            #endregion
+        #endregion
 
 
         ///////////////////////////////////////////////////////////////////////////////
         // Private Attributes...
         ///////////////////////////////////////////////////////////////////////////////
         #region Private Attributes...
+
+        /// <summary>
+        /// Maximum custom capabilities to read from the configuration...
+        /// </summary>
+        private const int c_maxCapCustom = 50;
 
         /// <summary>
         /// A task object (one that we're processing)...
