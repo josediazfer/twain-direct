@@ -26,19 +26,30 @@ namespace TwainDirect.Scanner
             string szWriteFolder;
             float fScale;
             FormMain form1;
+            bool blCheckRunning = true;
 
             // Are we already running?
-            Process[] aprocess = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location));
-            foreach (Process process in aprocess)
+            foreach(string szArg in a_aszArgs)
             {
-                // If it ain't us, it's somebody else...
-                if (process.Id != Process.GetCurrentProcess().Id)
+                if (szArg.Equals("checkrunning=false"))
                 {
-                    MessageBox.Show("This program is already running.  If you don't see it on the screen, check the system tray for the TWAIN Direct icon, and right click on it for the list of options.", "TWAIN Direct on TWAIN Bridge");
-                    Environment.Exit(1);
+                    blCheckRunning = false;
+                    break;
                 }
             }
-
+            if (blCheckRunning)
+            {
+                Process[] aprocess = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location));
+                foreach (Process process in aprocess)
+                {
+                    // If it ain't us, it's somebody else...
+                    if (process.Id != Process.GetCurrentProcess().Id)
+                    {
+                        MessageBox.Show("This program is already running.  If you don't see it on the screen, check the system tray for the TWAIN Direct icon, and right click on it for the list of options.", "TWAIN Direct on TWAIN Bridge");
+                        Environment.Exit(1);
+                    }
+                }
+            }
             // Load our configuration information and our arguments,
             // so that we can access them from anywhere in the code...
             if (!Config.Load(Application.ExecutablePath, a_aszArgs, "appdata.txt"))

@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="errCloseTwainBridge" xml:space="preserve">
-    <value>Quieres cerrar 'TWAIN Direct: TWAIN Bridge'?</value>
-  </data>
   <data name="errLookingForScanners" xml:space="preserve">
     <value>Localizando escaners...</value>
   </data>
+  <data name="errNoCloudConfig" xml:space="preserve">
+    <value>No se configuro una dirección url que apunte hacia un servidor Cloud</value>
+  </data>
   <data name="errNoCloudManager" xml:space="preserve">
-    <value>Lo sentimos, no tenemos un administrador de Cloud para este Cloud.</value>
+    <value>No se ha encontrado una direccion para la administracion del Cloud</value>
   </data>
   <data name="errNoScannersFound" xml:space="preserve">
     <value>No se encontraron escaners.</value>
@@ -141,6 +141,9 @@
   <data name="strButtonCloudRegisterEllipsis" xml:space="preserve">
     <value>Registrar Cloud...</value>
   </data>
+  <data name="strButtonConfigure" xml:space="preserve">
+    <value>Configurar</value>
+  </data>
   <data name="strButtonManageCloudEllipsis" xml:space="preserve">
     <value>Gestionar Cloud...</value>
   </data>
@@ -150,6 +153,9 @@
   <data name="strButtonRegisterEllipsis" xml:space="preserve">
     <value>Seleccionar escaner...</value>
     <comment>Pick a new TWAIN Driver...</comment>
+  </data>
+  <data name="strButtonSetup" xml:space="preserve">
+    <value>Configurar</value>
   </data>
   <data name="strButtonStart" xml:space="preserve">
     <value>Iniciar</value>
@@ -163,19 +169,19 @@
     <value>Gestión Local...</value>
   </data>
   <data name="strCheckboxAdvertise" xml:space="preserve">
-    <value>Aviso en TWAIN local y TWAIN Cloud cuando la aplicación se inicia</value>
+    <value>Iniciar TWAIN local y TWAIN Cloud cuando la aplicación se inicia</value>
   </data>
   <data name="strCheckboxConfirmation" xml:space="preserve">
     <value>Enseñar mensaje de confirmación cuando se empieza a escanear</value>
-  </data>
-  <data name="strCheckboxConnectOnStartup" xml:space="preserve">
-    <value>Conectar al abrir la aplicación</value>
   </data>
   <data name="strCheckboxRunOnLogin" xml:space="preserve">
     <value>Ejecute este programa cuando inicie sesión</value>
   </data>
   <data name="strCheckboxStartNpm" xml:space="preserve">
     <value>Automaticamente ejecutar 'npm start' para twain-cloud-express</value>
+  </data>
+  <data name="strCloseTwainBridge" xml:space="preserve">
+    <value>Quieres cerrar 'TWAIN Direct: TWAIN Bridge'?</value>
   </data>
   <data name="strFormMainTitle" xml:space="preserve">
     <value>TWAIN Direct: TWAIN Bridge</value>
@@ -191,13 +197,13 @@
     <value>Dispositivo Cloud:</value>
   </data>
   <data name="strLabelStep1" xml:space="preserve">
-    <value>Paso 1: Selecciona el controlador de TWAIN para tu escaner.</value>
+    <value>Selecciona el controlador de TWAIN para tu escaner.</value>
   </data>
   <data name="strLabelStep2" xml:space="preserve">
-    <value>Paso  2: Configura tu sistema para soportar TWAIN en local (opcional).</value>
+    <value>Configura tu sistema para soportar TWAIN en local (opcional).</value>
   </data>
   <data name="strLabelStep3" xml:space="preserve">
-    <value>Paso 3: Registrar con TWAIN Cloud (opcional).</value>
+    <value>Registrar con TWAIN Cloud (opcional).</value>
   </data>
   <data name="strMenuAbout" xml:space="preserve">
     <value>&amp;Acerca de</value>
@@ -236,9 +242,6 @@
   <data name="strTextNoScannersRegistered" xml:space="preserve">
     <value>No hay escaners registrados...</value>
     <comment>Couldn't find any scanners...</comment>
-  </data>
-  <data name="strTextNotClosing" xml:space="preserve">
-    <value>En Aceptar, el programa se minimizará en la bandeja del sistema, haga clic con el botón derecho en su icono para acceder a él. Al cancelar este cuadro de diálogo, se cerrará.</value>
   </data>
   <data name="strTextNpmFailed" xml:space="preserve">
     <value>Fallo al iniciar 'npm'</value>

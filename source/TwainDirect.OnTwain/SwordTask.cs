@@ -1843,39 +1843,9 @@ namespace TwainDirect.OnTwain
                         }
                     }
                 }
-            }
-            // Set custom capabilities defined by user
-            SetCustomCapabilities();
-
+            }  
             // Life is good...
             return (true);
-        }
-
-        /// <summary>
-        /// Set custom capabilites defined by user...
-        /// </summary>
-        private void SetCustomCapabilities()
-        {
-            for (int i = 0; i < c_maxCapCustom && Config.Get("capCustom[" + i + "]", "") != ""; i++)
-            {
-                string szCapability = Config.Get("capCustom[" + i + "]", "");
-                string szStatus = "";
-                TWAIN.STS sts;
-
-                sts = m_twain.Send("DG_CONTROL", "DAT_CAPABILITY", "MSG_SET", ref szCapability, ref szStatus);
-                if (sts == TWAIN.STS.BADPROTOCOL)
-                {
-                    TWAINWorkingGroup.Log.Error("Action: invalid custom capability " + szCapability);
-                }
-                else if (sts != TWAIN.STS.SUCCESS)
-                {
-                    TWAINWorkingGroup.Log.Error("Action: we can't set custom capability " + szCapability);
-                }
-                else
-                {
-                    TWAINWorkingGroup.Log.Info("Set custom capability successfully " + szCapability);
-                }
-            }
         }
 
         /// <summary>

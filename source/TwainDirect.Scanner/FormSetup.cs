@@ -84,8 +84,7 @@ namespace TwainDirect.Scanner
             m_checkboxConfirmation.Text = Config.GetResource(m_resourcemanager, "strCheckboxConfirmation"); //""Prompt for confirmation when scanning starts";
             m_RegisteredDeviceLabel.Text = Config.GetResource(m_resourcemanager, "strLabelRegisteredDevice"); // "Current Cloud Device:";
             m_checkboxStartNpm.Text = Config.GetResource(m_resourcemanager, "strCheckboxStartNpm"); // "Automatically run \'npm start\' for twain-cloud-express";
-            m_checkboxConnectOnStartup.Text = Config.GetResource(m_resourcemanager, "strCheckboxConnectOnStartup"); // "Connect on startup";
-
+            m_buttonConfigure.Text = Config.GetResource(m_resourcemanager, "strButtonConfigure"); // Configure from any external entity (aka Buroweb)
             // Set stuff...
             m_textboxCurrentDriver.Text = m_formmain.GetTwainLocalTy();
             m_textboxCurrentNote.Text = m_formmain.GetTwainLocalNote();
@@ -142,7 +141,6 @@ namespace TwainDirect.Scanner
 
             // Okay, we can let this happen now...
             m_blSkipUpdatingTheRegistry = false;           
-            m_checkboxConnectOnStartup.Checked = Config.Get("ConnectOnStartup", "no") == "yes";
         }
 
         /// <summary>
@@ -382,6 +380,19 @@ namespace TwainDirect.Scanner
             m_textboxCurrentNote.Text = m_formmain.GetTwainLocalNote();
         }
 
+        private bool checkCloudConfig()
+        {
+            CloudManager.CloudInfo cloudinfo = CloudManager.GetCurrentCloudInfo();
+
+            if (cloudinfo == null || string.IsNullOrEmpty(cloudinfo.szUrl))
+            { 
+                MessageBox.Show(Config.GetResource(m_resourcemanager, "errNoCloudConfig"), Config.GetResource(m_resourcemanager, "strFormMainTitle"));
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Register a device with cloud infrastructure.
         /// </summary>
@@ -389,6 +400,10 @@ namespace TwainDirect.Scanner
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private async void m_buttonCloudRegister_Click(object sender, EventArgs e)
         {
+            if (!checkCloudConfig())
+            {
+                return;
+            }
             try
             {
                 StartNpmIfNeeded(true);
@@ -428,14 +443,14 @@ namespace TwainDirect.Scanner
         {
             StartNpmIfNeeded(false);
             CloudManager.CloudInfo cloudinfo = CloudManager.GetCurrentCloudInfo();
-            if ((cloudinfo != null) && !string.IsNullOrEmpty(cloudinfo.szManager))
+
+            if (cloudinfo == null || string.IsNullOrEmpty(cloudinfo.szManager))
             {
-                Process.Start(cloudinfo.szManager);
+                MessageBox.Show(Config.GetResource(m_resourcemanager, "errNoCloudManager"), Config.GetResource(m_resourcemanager, "strFormMainTitle"));
+                return;
             }
-            else
-            {
-                MessageBox.Show(Config.GetResource(m_resourcemanager, "errNoCloudManager"), Config.GetResource(m_resourcemanager, "strFormScanTitle"));
-            }
+
+            Process.Start(cloudinfo.szManager);
         }
 
         /// <summary>
@@ -643,7 +658,6 @@ namespace TwainDirect.Scanner
 
         private void FormSetup_Load(object sender, EventArgs e)
         {
-
         }
 
         /// <summary>
@@ -680,14 +694,17 @@ namespace TwainDirect.Scanner
 
         private void m_buttonCloudRefreshScannersList_Click(object sender, EventArgs e)
         {
+            if (!checkCloudConfig())
+            {
+                return;
+            }
             var apiRoot = CloudManager.GetCloudApiRoot();
             var client = new TwainCloudClient(apiRoot);
             var applicationManager = new ApplicationManager(client);
-
-
             applicationManager.GetSignin().ContinueWith(signinTask =>
             {
                 var signinResponse = signinTask.Result;
+
                 Invoke(new MethodInvoker(delegate ()
                 { 
                     FacebookLoginForm loginForm = new FacebookLoginForm(signinResponse.Url);
@@ -724,11 +741,37 @@ namespace TwainDirect.Scanner
                              BeginInvoke(new MethodInvoker(delegate() { LoadRegisteredCloudDevices(); }));
                          });
                     };
-                    Config.ChangeInternetExplorerVersion();
                     loginForm.Text = m_buttonCloudRefreshScannersList.Text;
                     loginForm.ShowDialog();
                 }));
             });
+        }
+
+        private void m_buttonConfigure_Click(object sender, EventArgs e)
+        {
+            FormBurowebConfig formBurowebConfig = new FormBurowebConfig(m_resourcemanager);
+
+            formBurowebConfig.ShowDialog();
+            if (formBurowebConfig.isConfigSaved())
+            {
+                Process restartProcess;
+
+                m_checkboxAdvertise.Checked = formBurowebConfig.isAdvertise();
+                m_checkboxRunOnLogin.Checked = formBurowebConfig.isRunOnLogon();
+
+                m_checkboxRunOnLogin_CheckedChanged(m_checkboxRunOnLogin, e);
+
+                MessageBox.Show("La configuracion fue actualizada correctamente, se procederá a reiniciar la aplicación con la configuración nueva", "Configuracion");
+                m_scanner.MonitorTasksStop(true);
+                restartProcess = new Process();
+                restartProcess.StartInfo.FileName = System.Reflection.Assembly.GetEntryAssembly().Location;
+                restartProcess.StartInfo.Arguments = "background=true " +
+                                                     "checkrunning=false " +
+                                                     (m_checkboxAdvertise.Checked ? " startmonitoring=true" : "") +
+                                                     (m_checkboxConfirmation.Checked ? " confirmscan=true" : "");
+                restartProcess.Start();
+                Application.Exit();
+            }
         }
     }
 }

@@ -2652,20 +2652,42 @@ namespace TwainDirect.OnTwain
         /// </summary>
         private void SetCustomCapabilities()
         {
-            for (int i = 0; i < c_maxCapCustom && Config.Get("capCustom[" + i + "]", "") != ""; i++)
-            {
-                string szCapability = Config.Get("capCustom[" + i + "]", "");
-                string szStatus = "";
-                TWAIN.STS sts;
+            string szCapability;
+            string szProductName = m_deviceregisterSession.GetTwainInquiryData().GetProductName();
 
-                sts = Send("DG_CONTROL", "DAT_CAPABILITY", "MSG_SET", ref szCapability, ref szStatus);
+            for (int i = 0; i < c_maxCapCustoms && (szCapability = Config.Get("capCustoms[" + i + "]", "")) != ""; i++)
+            {
+                string szStatus = "";
+                long a_lJsonErrorindex;
+                JsonLookup jsonLookup = new JsonLookup();
+                TWAIN.STS sts;
+                string szCapabilityValue, szNameValue;
+
+                jsonLookup.Load(szCapability, out a_lJsonErrorindex);
+                if (a_lJsonErrorindex != 0)
+                {
+                    TWAINWorkingGroup.Log.Error("Error setting a custom capability, invalid JSON format at  " + a_lJsonErrorindex + " position");
+                    continue;
+                }
+                szNameValue = jsonLookup.Get("name");
+                if (szNameValue != null && szNameValue.Length > 0 && szProductName.IndexOf(szNameValue) < 0)
+                {
+                    continue;
+                }
+                szCapabilityValue = jsonLookup.Get("capability");
+                if (szCapabilityValue == null || szCapabilityValue.Length < 0)
+                {
+                    TWAINWorkingGroup.Log.Error("Error setting a custom capability, missing capability property" + szCapability);
+                    continue;
+                }
+                sts = Send("DG_CONTROL", "DAT_CAPABILITY", "MSG_SET", ref szCapabilityValue, ref szStatus);
                 if (sts == TWAIN.STS.BADPROTOCOL)
                 {
-                    TWAINWorkingGroup.Log.Error("Action: invalid custom capability " + szCapability);
+                    TWAINWorkingGroup.Log.Error("Error setting a custom capability, invalid custom capability " + szCapability);
                 }
                 else if (sts != TWAIN.STS.SUCCESS)
                 {
-                    TWAINWorkingGroup.Log.Error("Action: we can't set custom capability " + szCapability);
+                    TWAINWorkingGroup.Log.Error("Error setting a custom capability, we can't set custom capability " + szCapability);
                 }
                 else
                 {
@@ -2946,7 +2968,7 @@ namespace TwainDirect.OnTwain
         /// <summary>
         /// Maximum custom capabilities to read from the configuration...
         /// </summary>
-        private const int c_maxCapCustom = 50;
+        private const int c_maxCapCustoms = 50;
 
         /// <summary>
         /// Information about the scanner sent to use by createSession...

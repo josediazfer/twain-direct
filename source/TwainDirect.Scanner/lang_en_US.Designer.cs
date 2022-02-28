@@ -61,15 +61,6 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do you want to close the &apos;TWAIN Direct: TWAIN Bridge&apos; program?.
-        /// </summary>
-        public static string errCloseTwainBridge {
-            get {
-                return ResourceManager.GetString("errCloseTwainBridge", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Looking for scanners....
         /// </summary>
         public static string errLookingForScanners {
@@ -79,7 +70,16 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorry, we do not have a cloud manager for this cloud..
+        ///   Looks up a localized string similar to Not Cloud url configured.
+        /// </summary>
+        public static string errNoCloudConfig {
+            get {
+                return ResourceManager.GetString("errNoCloudConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, we do not have a cloud manager for this cloud. .
         /// </summary>
         public static string errNoCloudManager {
             get {
@@ -133,6 +133,15 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configure.
+        /// </summary>
+        public static string strButtonConfigure {
+            get {
+                return ResourceManager.GetString("strButtonConfigure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manage Cloud....
         /// </summary>
         public static string strButtonManageCloudEllipsis {
@@ -156,6 +165,15 @@ namespace TwainDirect.Scanner {
         public static string strButtonRegisterEllipsis {
             get {
                 return ResourceManager.GetString("strButtonRegisterEllipsis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup.
+        /// </summary>
+        public static string strButtonSetup {
+            get {
+                return ResourceManager.GetString("strButtonSetup", resourceCulture);
             }
         }
         
@@ -187,7 +205,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advertise on TWAIN Local and TWAIN Cloud when this program starts.
+        ///   Looks up a localized string similar to Startup TWAIN Local and TWAIN Cloud when this program starts.
         /// </summary>
         public static string strCheckboxAdvertise {
             get {
@@ -201,15 +219,6 @@ namespace TwainDirect.Scanner {
         public static string strCheckboxConfirmation {
             get {
                 return ResourceManager.GetString("strCheckboxConfirmation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Connect on startup.
-        /// </summary>
-        public static string strCheckboxConnectOnStartup {
-            get {
-                return ResourceManager.GetString("strCheckboxConnectOnStartup", resourceCulture);
             }
         }
         
@@ -228,6 +237,15 @@ namespace TwainDirect.Scanner {
         public static string strCheckboxStartNpm {
             get {
                 return ResourceManager.GetString("strCheckboxStartNpm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to close the &apos;TWAIN Direct: TWAIN Bridge&apos; program?.
+        /// </summary>
+        public static string strCloseTwainBridge {
+            get {
+                return ResourceManager.GetString("strCloseTwainBridge", resourceCulture);
             }
         }
         
@@ -268,7 +286,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Step 1: Select the TWAIN driver for your scanner..
+        ///   Looks up a localized string similar to Select the TWAIN driver for your scanner..
         /// </summary>
         public static string strLabelStep1 {
             get {
@@ -277,7 +295,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Step 2: Configure your system to support TWAIN Local (optional)..
+        ///   Looks up a localized string similar to Configure your system to support TWAIN Local (optional)..
         /// </summary>
         public static string strLabelStep2 {
             get {
@@ -286,7 +304,7 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Step 3: Register with TWAIN Cloud (optional)..
+        ///   Looks up a localized string similar to Register with TWAIN Cloud (optional)..
         /// </summary>
         public static string strLabelStep3 {
             get {
@@ -381,15 +399,6 @@ namespace TwainDirect.Scanner {
         public static string strTextNoScannersRegistered {
             get {
                 return ResourceManager.GetString("strTextNoScannersRegistered", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to On OK the program will be minimized to the system tray, right-click its icon there to access it. Canceling this dialog will exit..
-        /// </summary>
-        public static string strTextNotClosing {
-            get {
-                return ResourceManager.GetString("strTextNotClosing", resourceCulture);
             }
         }
         

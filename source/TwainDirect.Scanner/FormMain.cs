@@ -98,6 +98,7 @@ namespace TwainDirect.Scanner
             this.Text = Config.GetResource(m_resourcemanager, "strFormMainTitle"); // TWAIN Direct: TWAIN Bridge
             m_buttonStart.Text = Config.GetResource(m_resourcemanager, "strButtonStart"); // Start
             m_buttonStop.Text = Config.GetResource(m_resourcemanager, "strButtonStop"); // Stop
+            m_buttonSetup.Text = Config.GetResource(m_resourcemanager, "strButtonSetup"); // Setup
 
             // Context memory for the system tray...
             MenuItem menuitemOpen = new MenuItem(Config.GetResource(m_resourcemanager, "strMenuShowConsole")); // Open...
@@ -546,7 +547,7 @@ namespace TwainDirect.Scanner
             // Do you want to close the 'TWAIN Direct on TWAIN Bridge' program?
             DialogResult dialogresult = MessageBox.Show
             (
-                Config.GetResource(m_resourcemanager, "errCloseTwainBridge"),
+                Config.GetResource(m_resourcemanager, "strCloseTwainBridge"),
                 Config.GetResource(m_resourcemanager, "strFormMainTitle"),
                 MessageBoxButtons.YesNo
             );
@@ -725,24 +726,11 @@ namespace TwainDirect.Scanner
             // Reeeeeeeeejected!
             if (!ms_blSystemShutdown && !m_blAllowFormToClose && (e.CloseReason == CloseReason.UserClosing))
             {
-                DialogResult dialogresult = MessageBox.Show(Config.GetResource(m_resourcemanager, "strTextNotClosing"), Config.GetResource(m_resourcemanager, "strFormMainTitle"), MessageBoxButtons.OKCancel);
-                if (dialogresult == DialogResult.OK)
+                DialogResult dialogresult = MessageBox.Show(Config.GetResource(m_resourcemanager, "strCloseTwainBridge"), Config.GetResource(m_resourcemanager, "strFormMainTitle"), MessageBoxButtons.OKCancel);
+                if (dialogresult != DialogResult.OK)
                 {
                     e.Cancel = true;
-                    WindowState = FormWindowState.Minimized;
-                    this.Hide();
-                    return;
                 }
-            }
-
-            // Okay, fine, clean house...
-            if (m_scanner != null)
-            {
-                m_scanner.MonitorTasksStop(e.CloseReason == CloseReason.UserClosing);
-            }
-            if (m_formsetup != null)
-            {
-                m_formsetup.Cleanup();
             }
         }
 
@@ -914,10 +902,7 @@ namespace TwainDirect.Scanner
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            if (Config.Get("ConnectOnStartup", "no") == "yes")
-            {
-                BeginInvoke(new MethodInvoker(delegate { m_buttonStart_Click(sender, e); }));
-            }
+            Config.ChangeInternetExplorerVersion();
         }
 
         private void m_richtextboxTask_TextChanged(object sender, EventArgs e)

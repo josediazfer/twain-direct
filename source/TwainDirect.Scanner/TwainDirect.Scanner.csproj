@@ -96,6 +96,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -107,11 +108,18 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\TwainDirectScannerException.cs" />
     <Compile Include="ConfirmScan.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ConfirmScan.Designer.cs">
       <DependentUpon>ConfirmScan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormBurowebConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBurowebConfig.Designer.cs">
+      <DependentUpon>FormBurowebConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -160,6 +168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConfirmScan.resx">
       <DependentUpon>ConfirmScan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBurowebConfig.resx">
+      <DependentUpon>FormBurowebConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

@@ -76,8 +76,7 @@
         "no - http only",
         "yes - https only"
     ],
-    "XConnectOnStartup": "no",
-    "XConnectOnStartup": "yes",
+    "XconnectOnStartup": "yes",
 
 
     "commentUseImageBlocksComplete": [
@@ -99,6 +98,9 @@
         "changing the URLACL setting too."
     ],
     "XusePort": 34034,
+
+
+    "burowebURL": 'http://127.0.0.1:8080/buroweb',
 
 
 
@@ -138,7 +140,7 @@
             "name": "TAO Cloud",
             "url": "http://127.0.0.1:18080/TAOTwainDirectCloud/api",
             "manager": "http://127.0.0.1:18080/TAOTwainDirectCloud/",
-            "signin": "google",
+            "signin": "tao",
             "folderName": "taocloud",
             "useHttps": "no"
         }

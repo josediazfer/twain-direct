@@ -18,9 +18,18 @@
         "2 - log verbose stuff, like HTML headers",
         "4 - flush to disk, use to help diagnose crashes"
     ],
-    "XlogLevel": 3,
+    "logLevel": 7,
 
-
+    "commentCapCustom": [
+        "******************************************************************************",
+        "set custom capabilities",
+	"the capCustom entry format is: capability_code,capability_type,value_type,value",
+	"For example: ",
+	"	0x1010,TWON_ONEVALUE,TWTY_UINT32,3"
+    ],
+    "capCustoms": [
+	"0x40,TWON_ONEVALUE,TWTY_UINT32,3"
+    ],
 
     "commentDelayTwainDirectOnTwain": [
         "******************************************************************************",

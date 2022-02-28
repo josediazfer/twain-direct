@@ -232,9 +232,13 @@ namespace TwainDirect.Support
         {
             try
             {
+                string szConfigFileName;
+                string szConfigFile;
+
                 // Work out where our executable lives...
                 ms_szExecutablePath = a_szExecutablePath;
                 ms_szExecutableName = Path.GetFileNameWithoutExtension(ms_szExecutablePath);
+                szConfigFileName = ms_szExecutableName + "." + a_szConfigFile;
 
                 // The read folder is the path to the executable.  This is where we're
                 // going to find our appdata.txt file, which contains configuration
@@ -254,27 +258,6 @@ namespace TwainDirect.Support
                 // Store the command line...
                 ms_aszCommandLine = a_aszCommandLine;
 
-                // Load the config, we'll first look for a name decorated version
-                // of the file (ex: TwainDirect.Scanner.appdata.txt) in the data
-                // folder, and if that fails we'll try the same folder as the .exe,
-                // if that fails we'll do just the name given to us...
-                string szConfigFile = Path.Combine(Path.Combine(ms_szReadFolder, "data"), ms_szExecutableName + "." + a_szConfigFile);
-                if (!File.Exists(szConfigFile))
-                {
-                    szConfigFile = Path.Combine(ms_szReadFolder, ms_szExecutableName + "." + a_szConfigFile);
-                    if (!File.Exists(szConfigFile))
-                    {
-                        szConfigFile = Path.Combine(ms_szReadFolder, a_szConfigFile);
-                    }
-                }
-                if (File.Exists(szConfigFile))
-                {
-                    long a_lJsonErrorindex;
-                    string szConfig = File.ReadAllText(szConfigFile);
-                    ms_jsonlookup = new JsonLookup();
-                    ms_jsonlookup.Load(szConfig, out a_lJsonErrorindex);
-                }
-
                 // Check if the user wants to override the read and write folders...
                 ms_szReadFolder = Get("readFolder", ms_szReadFolder);
                 ms_szWriteFolder = Get("writeFolder", ms_szWriteFolder);
@@ -284,12 +267,27 @@ namespace TwainDirect.Support
                 {
                     Directory.CreateDirectory(ms_szWriteFolder);
                 }
+                // Load the config
+                // First, try to find in the %appdata% folder, if it´s failed then try to find in the executable folder
+                szConfigFile = getConfigFile(ms_szWriteFolder, szConfigFileName, a_szConfigFile);
+                if (szConfigFile == null)
+                {
+                    szConfigFile = getConfigFile(ms_szReadFolder, szConfigFileName, a_szConfigFile);
+                }
+                // If the config file was found it then load json content
+                if (szConfigFile != null)
+                {
+                    long a_lJsonErrorindex;
+                    string szConfig = File.ReadAllText(szConfigFile);
+                    ms_jsonlookup = new JsonLookup();
+                    ms_jsonlookup.Load(szConfig, out a_lJsonErrorindex);
+                }
             }
             catch
             {
                 return (false);
             }
-
+            
             // All done...
             return (true);
         }
@@ -374,6 +372,40 @@ namespace TwainDirect.Support
         public const int BrowserEmulationValueIE11 = 0x00002AF9; // IE11
         public const int BrowserEmulationValueIE10 = 0x00002711; // IE10
         public const int BrowserEmulationValueIE9 = 0x0000270F; // IE9
+
+        #endregion
+
+        // Private Methods...
+        #region Private Methods
+
+        /// <summary>
+        /// Lookup the configuration file.
+        /// </summary>
+        /// <param name="szRootFolder"></param>
+        /// <param name="szConfigFileName"></param>
+        /// <param name="a_szConfigFile"></param>
+        private static string getConfigFile(string szRootFolder, string szConfigFileName, string a_szConfigFile)
+        {
+            // Load the config, we'll first look for a name decorated version
+            // of the file (ex: TwainDirect.Scanner.appdata.txt) in the data
+            // folder, and if that fails we'll try the same folder as the .exe,
+            // if that fails we'll do just the name given to us...
+            string[] szConfigFilesList = new string[] {
+                Path.Combine(Path.Combine(szRootFolder, "data"), szConfigFileName),
+                Path.Combine(szRootFolder, szConfigFileName),
+                Path.Combine(szRootFolder, a_szConfigFile)
+            };
+
+            foreach (string szConfigFilePath in szConfigFilesList)
+            {
+                if (File.Exists(szConfigFilePath))
+                {
+                    return szConfigFilePath;
+                }
+            }
+
+            return null;
+        }
 
         #endregion
 

@@ -154,7 +154,7 @@ namespace TwainDirect.Support
             }
 
             // Ruh-roh...
-            return ("we have a problem");
+            return ("");
         }
 
         public static string GetScannerCloudUrl(ScannerInformation scanner)

@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="errCloseTwainBridge" xml:space="preserve">
-    <value>Do you want to close the 'TWAIN Direct: TWAIN Bridge' program?</value>
-  </data>
   <data name="errLookingForScanners" xml:space="preserve">
     <value>Looking for scanners...</value>
   </data>
+  <data name="errNoCloudConfig" xml:space="preserve">
+    <value>Not Cloud url configured</value>
+  </data>
   <data name="errNoCloudManager" xml:space="preserve">
-    <value>Sorry, we do not have a cloud manager for this cloud.</value>
+    <value>Sorry, we do not have a cloud manager for this cloud. </value>
   </data>
   <data name="errNoScannersFound" xml:space="preserve">
     <value>No scanners found.</value>
@@ -141,6 +141,9 @@
   <data name="strButtonCloudRegisterEllipsis" xml:space="preserve">
     <value>Register Cloud...</value>
   </data>
+  <data name="strButtonConfigure" xml:space="preserve">
+    <value>Configure</value>
+  </data>
   <data name="strButtonManageCloudEllipsis" xml:space="preserve">
     <value>Manage Cloud...</value>
   </data>
@@ -150,6 +153,9 @@
   <data name="strButtonRegisterEllipsis" xml:space="preserve">
     <value>Select Scanner...</value>
     <comment>Pick a new TWAIN Driver...</comment>
+  </data>
+  <data name="strButtonSetup" xml:space="preserve">
+    <value>Setup</value>
   </data>
   <data name="strButtonStart" xml:space="preserve">
     <value>Start</value>
@@ -163,19 +169,19 @@
     <value>Manage Local...</value>
   </data>
   <data name="strCheckboxAdvertise" xml:space="preserve">
-    <value>Advertise on TWAIN Local and TWAIN Cloud when this program starts</value>
+    <value>Startup TWAIN Local and TWAIN Cloud when this program starts</value>
   </data>
   <data name="strCheckboxConfirmation" xml:space="preserve">
     <value>Prompt for confirmation when scanning starts</value>
-  </data>
-  <data name="strCheckboxConnectOnStartup" xml:space="preserve">
-    <value>Connect on startup</value>
   </data>
   <data name="strCheckboxRunOnLogin" xml:space="preserve">
     <value>Run this program when you log on</value>
   </data>
   <data name="strCheckboxStartNpm" xml:space="preserve">
     <value>Automatically run 'npm start' for twain-cloud-express</value>
+  </data>
+  <data name="strCloseTwainBridge" xml:space="preserve">
+    <value>Do you want to close the 'TWAIN Direct: TWAIN Bridge' program?</value>
   </data>
   <data name="strFormMainTitle" xml:space="preserve">
     <value>TWAIN Direct: TWAIN Bridge</value>
@@ -191,13 +197,13 @@
     <value>Current Cloud Device:</value>
   </data>
   <data name="strLabelStep1" xml:space="preserve">
-    <value>Step 1: Select the TWAIN driver for your scanner.</value>
+    <value>Select the TWAIN driver for your scanner.</value>
   </data>
   <data name="strLabelStep2" xml:space="preserve">
-    <value>Step 2: Configure your system to support TWAIN Local (optional).</value>
+    <value>Configure your system to support TWAIN Local (optional).</value>
   </data>
   <data name="strLabelStep3" xml:space="preserve">
-    <value>Step 3: Register with TWAIN Cloud (optional).</value>
+    <value>Register with TWAIN Cloud (optional).</value>
   </data>
   <data name="strMenuAbout" xml:space="preserve">
     <value>&amp;About</value>
@@ -236,9 +242,6 @@
   <data name="strTextNoScannersRegistered" xml:space="preserve">
     <value>No scanners registered...</value>
     <comment>Couldn't find any scanners...</comment>
-  </data>
-  <data name="strTextNotClosing" xml:space="preserve">
-    <value>On OK the program will be minimized to the system tray, right-click its icon there to access it. Canceling this dialog will exit.</value>
   </data>
   <data name="strTextNpmFailed" xml:space="preserve">
     <value>Failed to start npm</value>
