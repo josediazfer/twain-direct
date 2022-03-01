@@ -1,7 +1,9 @@
 ﻿// Helpers...
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,9 +29,10 @@ namespace TwainDirect.Scanner
             float fScale;
             FormMain form1;
             bool blCheckRunning = true;
+            ResourceManager resourceManager = getResourceManager();
 
             // Are we already running?
-            foreach(string szArg in a_aszArgs)
+            foreach (string szArg in a_aszArgs)
             {
                 if (szArg.Equals("checkrunning=false"))
                 {
@@ -45,7 +48,7 @@ namespace TwainDirect.Scanner
                     // If it ain't us, it's somebody else...
                     if (process.Id != Process.GetCurrentProcess().Id)
                     {
-                        MessageBox.Show("This program is already running.  If you don't see it on the screen, check the system tray for the TWAIN Direct icon, and right click on it for the list of options.", "TWAIN Direct on TWAIN Bridge");
+                        MessageBox.Show(resourceManager.GetString("errRunningOtherInstance"), resourceManager.GetString("strFormMainTitle"));
                         Environment.Exit(1);
                     }
                 }
@@ -54,7 +57,7 @@ namespace TwainDirect.Scanner
             // so that we can access them from anywhere in the code...
             if (!Config.Load(Application.ExecutablePath, a_aszArgs, "appdata.txt"))
             {
-                MessageBox.Show("Error starting.  Try uninstalling and reinstalling this software.", "Error");
+                MessageBox.Show(resourceManager.GetString("errStartingProgram"), resourceManager.GetString("strFormMainTitle"));
                 Environment.Exit(1);
             }
 
@@ -140,7 +143,7 @@ namespace TwainDirect.Scanner
                 case Mode.WINDOW:
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    form1 = new FormMain();
+                    form1 = new FormMain(resourceManager);
                     Application.Run(form1);
                     form1.Dispose();
                     break;
@@ -213,6 +216,42 @@ namespace TwainDirect.Scanner
             // Otherwise let the user interact with us...
             Log.Info("Mode: " + mode + " " + "command=" + ((a_szCommand == null) ? "*none*" : a_szCommand));
             return (mode);
+        }
+
+        private static ResourceManager getResourceManager()
+        {
+            ResourceManager resourceManager;
+
+            // Localize, the user can override the system default...
+            string szCurrentUiCulture = Config.Get("language", "");
+            if (string.IsNullOrEmpty(szCurrentUiCulture))
+            {
+                szCurrentUiCulture = Thread.CurrentThread.CurrentUICulture.ToString();
+            }
+            szCurrentUiCulture = szCurrentUiCulture.ToLower();
+            if (szCurrentUiCulture.EndsWith("-es"))
+            {
+                Log.Info("UiCulture: " + szCurrentUiCulture);
+                resourceManager = lang_es_ES.ResourceManager;
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("es-ES");
+            }
+            else if (szCurrentUiCulture.EndsWith("-fr"))
+            {
+                Log.Info("UiCulture: " + szCurrentUiCulture);
+                resourceManager = lang_fr_FR.ResourceManager;
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-FR");
+            }
+            else
+            {
+                if (!szCurrentUiCulture.Equals("en-US"))
+                {
+                    Log.Info("UiCulture: " + szCurrentUiCulture + " (not supported, so using en-US)");
+                }
+                resourceManager = lang_en_US.ResourceManager;
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            }
+
+            return resourceManager;
         }
 
         /// <summary>

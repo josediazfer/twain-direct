@@ -108,7 +108,6 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Common\TwainDirectScannerException.cs" />
     <Compile Include="ConfirmScan.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -55,36 +55,9 @@ namespace TwainDirect.Scanner
         /// <summary>
         /// Initialize stuff for our form...
         /// </summary>
-        public FormMain()
+        public FormMain(ResourceManager resourceManager)
         {
-            // Localize, the user can override the system default...
-            string szCurrentUiCulture = Config.Get("language", "");
-            if (string.IsNullOrEmpty(szCurrentUiCulture))
-            {
-                szCurrentUiCulture = Thread.CurrentThread.CurrentUICulture.ToString();
-            }
-            szCurrentUiCulture = szCurrentUiCulture.ToLower();
-            if (szCurrentUiCulture.EndsWith("-es"))
-            {
-                Log.Info("UiCulture: " + szCurrentUiCulture);
-                m_resourcemanager = lang_es_ES.ResourceManager;
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo("es-ES");
-            }
-            else if(szCurrentUiCulture.EndsWith("-fr"))
-            {
-                Log.Info("UiCulture: " + szCurrentUiCulture);
-                m_resourcemanager = lang_fr_FR.ResourceManager;
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-FR");
-            } else
-            {
-                if (!szCurrentUiCulture.Equals("en-US"))
-                {
-                    Log.Info("UiCulture: " + szCurrentUiCulture + " (not supported, so using en-US)");
-                }
-                m_resourcemanager = lang_en_US.ResourceManager;
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-            }
-
+            m_resourcemanager = resourceManager;
             // Confirm scan, we check for the command line (confirmscan)
             // and for the appdata.txt file (useConfirmScan).  The default
             // is for it to be off...

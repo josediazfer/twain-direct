@@ -115,6 +115,24 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This program is already running.  If you don&apos;t see it on the screen, check the system tray for the TWAIN Direct icon, and right click on it for the list of options.
+        /// </summary>
+        public static string errRunningOtherInstance {
+            get {
+                return ResourceManager.GetString("errRunningOtherInstance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error starting program.  Try uninstalling and reinstalling this software.
+        /// </summary>
+        public static string errStartingProgram {
+            get {
+                return ResourceManager.GetString("errStartingProgram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to We are unable to use the selected scanner.  Please make sure your scanner is turned on and connected before trying again..
         /// </summary>
         public static string errUnableToUseScanner {

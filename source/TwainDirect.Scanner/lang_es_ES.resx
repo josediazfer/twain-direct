@@ -135,6 +135,12 @@
   <data name="errRegisterTwainDriver" xml:space="preserve">
     <value>Quieres seleccionar un controlador TWAIN?  Si es así, asegurate que este conectado y encendido</value>
   </data>
+  <data name="errRunningOtherInstance" xml:space="preserve">
+    <value>Este programa ya se está ejecutando. Si no lo ve en la pantalla, busque el icono de TWAIN Direct minimizado y haga clic derecho sobre él para ver la lista de opciones.</value>
+  </data>
+  <data name="errStartingProgram" xml:space="preserve">
+    <value>Error al iniciar la aplicación. Pruebe de reinstalarla de nuevo.</value>
+  </data>
   <data name="errUnableToUseScanner" xml:space="preserve">
     <value>No se pudo usar el escaner seleccionado.  Asegurate que este encendido y conectado</value>
   </data>

@@ -135,6 +135,12 @@
   <data name="errRegisterTwainDriver" xml:space="preserve">
     <value>Do you want to select a TWAIN driver?  If so, please make sure your scanner is powered on and connected, and press YES.</value>
   </data>
+  <data name="errRunningOtherInstance" xml:space="preserve">
+    <value>This program is already running.  If you don't see it on the screen, check the system tray for the TWAIN Direct icon, and right click on it for the list of options</value>
+  </data>
+  <data name="errStartingProgram" xml:space="preserve">
+    <value>Error starting program.  Try uninstalling and reinstalling this software</value>
+  </data>
   <data name="errUnableToUseScanner" xml:space="preserve">
     <value>We are unable to use the selected scanner.  Please make sure your scanner is turned on and connected before trying again.</value>
   </data>
