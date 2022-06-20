@@ -238,7 +238,8 @@ namespace TwainDirect.Support
             LOCAL_ERROR_STARTING,
             CLOUD_CONNECTION_FAILED,
             CLOUD_CONNECTION_ABORTED,
-            CLOUD_CONNECTION_SUCCESS
+            CLOUD_CONNECTION_SUCCESS,
+            CLOUD_CONNECTION_INFO,
         }
 
         public void DeviceDispatchCommandInternal
@@ -570,7 +571,7 @@ namespace TwainDirect.Support
         /// <param name="startingEvent">event name</param>
         /// <param name="message">event message detail description</param>
         /// <returns></returns>
-        public delegate void StartingCallback(STARTING_CALLBACK_EVENT startingEvent, String message);
+        public delegate void StartingCallback(STARTING_CALLBACK_EVENT startingEvent, String message, params Object[] arguments);
 
         /// <summary>
         /// The DNS name of the user owning the current createSession...
@@ -697,9 +698,11 @@ namespace TwainDirect.Support
                         }
                         catch (Exception)
                         {
+                            int connRetrySeconds = 30;
+
                             a_startingCloudCallback?.Invoke(STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_FAILED,
-                                                            "connection failed, retrying in 30 seconds...");
-                            Thread.Sleep(30000);
+                                                            "connection failed, retrying in " + connRetrySeconds + " seconds...", connRetrySeconds.ToString());
+                            Thread.Sleep(connRetrySeconds * 1000);
                             iRetry++;
                         }
                     } while (!lvCancelToken.IsCancellationRequested && !lbConnToCloud && iRetry < iRetries);

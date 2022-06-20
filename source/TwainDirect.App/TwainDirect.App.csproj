@@ -190,6 +190,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud.Forms\HazyBits.Twain.Cloud.Forms.csproj">
+      <Project>{0fbf20be-2155-4e58-abcb-df95dc7ee5a4}</Project>
+      <Name>HazyBits.Twain.Cloud.Forms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\twain-cloud-cs\Src\HazyBits.Twain.Cloud\HazyBits.Twain.Cloud.csproj">
+      <Project>{efd1d5e1-3d88-40f9-842c-ee72b4644061}</Project>
+      <Name>HazyBits.Twain.Cloud</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TwainDirect.Support\TwainDirect.Support.csproj">
       <Project>{50d52482-9c72-45b3-9bcf-1e4b49976e48}</Project>
       <Name>TwainDirect.Support</Name>

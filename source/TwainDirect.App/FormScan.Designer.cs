@@ -204,6 +204,7 @@
             this.m_pictureboxImage1.Size = new System.Drawing.Size(289, 341);
             this.m_pictureboxImage1.TabIndex = 0;
             this.m_pictureboxImage1.TabStop = false;
+            this.m_pictureboxImage1.Click += new System.EventHandler(this.m_pictureboxImage1_Click);
             // 
             // m_textbox1
             // 

@@ -292,7 +292,7 @@ namespace TwainDirect.Scanner
             // Start polling...
             Display("");
             Display("Starting, please wait...");
-            blSuccess = await m_scanner.MonitorTasksStart((code, message) =>
+            blSuccess = await m_scanner.MonitorTasksStart((code, message, arguments) =>
             {
                 switch (code)
                 {

@@ -129,7 +129,7 @@ namespace TwainDirect.Scanner
             m_formsetup = new FormSetup(this, m_resourcemanager, m_scanner, Display, blConfirmScan);
 
             // Our current cloud...
-            Display(Config.GetResource(m_resourcemanager, "strTextCurrentCloud") + " " + m_formsetup.GetCloudApiRoot());
+            Display(Config.GetResource(m_resourcemanager, "strTextCurrentCloud") + " " + m_formsetup.GetCloudApiRoot() + " " + CloudManager.GetCloudApiRoot());
 
             // If we don't have any devices, then don't let the user select
             // the start button...
@@ -366,10 +366,7 @@ namespace TwainDirect.Scanner
             }
         }
 
-        /// <summary>
-        /// Set the buttons based on the current state...
-        /// </summary>
-        public void SetButtons(ButtonState a_ebuttonstate)
+        private void SetButtonsState(ButtonState a_ebuttonstate)
         {
             switch (a_ebuttonstate)
             {
@@ -401,6 +398,23 @@ namespace TwainDirect.Scanner
                     m_buttonStart.Enabled = false;
                     m_buttonStop.Enabled = true;
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Set the buttons based on the current state...
+        /// </summary>
+        public void SetButtons(ButtonState a_ebuttonstate)
+        {
+            if (this.InvokeRequired)
+            {
+                Invoke(new MethodInvoker(delegate () {
+                    SetButtonsState(a_ebuttonstate);
+                }));
+            } 
+            else
+            {
+                SetButtonsState(a_ebuttonstate);
             }
         }
 
@@ -765,43 +779,58 @@ namespace TwainDirect.Scanner
                 Display("imageBlocks will not exceed " + Config.Get("imageBlockSize", 0) + " bytes...");
             }
             string szNote = m_scanner.GetTwainLocalNote();
-            if (!string.IsNullOrEmpty(szNote))
+            var scannerCloud = m_scanner.GetCurrentCloudScanner();
+            string szScannerId;
+
+            if (scannerCloud != null)
             {
-                Display(m_scanner.GetTwainLocalTy() + " (" + szNote + ")");
+                szScannerId = scannerCloud.Id;
             }
             else
             {
-                Display(m_scanner.GetTwainLocalTy());
+                szScannerId = "";
             }
-
+            if (!string.IsNullOrEmpty(szNote))
+            {
+                Display(m_scanner.GetTwainLocalTy() + " (" + szNote + ")" + " " + szScannerId);
+            }
+            else
+            {
+                Display(m_scanner.GetTwainLocalTy() + " " + m_scanner + " " + szScannerId);
+            }
             // Start monitoring the cloud...
             int iConnectionRetries = 0;
 
-            blSuccess = await m_scanner.MonitorTasksStart((code, message) =>
+            blSuccess = await m_scanner.MonitorTasksStart((code, message, arguments) =>
             {
                 switch (code)
                 {
                     // Twain Local states
                     case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_BAD_PARAMETER:
                     case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_ERROR_STARTING:
-                        Display("TWAIN Local " + message);
+                        if (String.IsNullOrEmpty(szScannerId))
+                        {
+                            Display("TWAIN Local " + message);
+                        }
                         break;
                     case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.LOCAL_SERVER_STARTED:
-                        Display("TWAIN Local is ready for use...");
+                        Display(m_resourcemanager.GetString("strTextTwainLocalReady"));
                         SetButtons(ButtonState.Started);
                         break;
-                        // Twain Cloud states
-                        case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_FAILED:
+                    // Twain Cloud states
+                    case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_FAILED:
                         {
                             if (iConnectionRetries < 10)
                             {
-                                Display("TWAIN Cloud  " + message);
+                                Display(String.Format(Config.GetResource(m_resourcemanager, "errCloudConnectionFailed"), arguments[0]));
                             }
                         }
                         iConnectionRetries++;
+                        SetButtons(ButtonState.Started);
                         break;
                     case TwainLocalScannerDevice.STARTING_CALLBACK_EVENT.CLOUD_CONNECTION_SUCCESS:
-                        Display("TWAIN Cloud is ready for use...");
+                        Display(m_resourcemanager.GetString("strTextTwainCloudReady"));
+                        SetButtons(ButtonState.Started);
                         break;
                 }
             });

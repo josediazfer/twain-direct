@@ -114,9 +114,6 @@ namespace TwainDirect.Support
             // Make a note of our callback...
             m_dispatchcommand = a_dispatchcommand;
 
-            // Create the listener...
-            m_httplistener = new HttpListener();
-
             // HTTPS support for mono, still have to sort out Windows
             // http://stackoverflow.com/questions/13379963/httplistener-with-https-on-monotouch
 
@@ -129,6 +126,9 @@ namespace TwainDirect.Support
                 m_iPort = ((IPEndPoint)tcplistener.LocalEndpoint).Port;
                 tcplistener.Stop();
             }
+
+            // Create the listener...
+            m_httplistener = new HttpListener();
 
             // Add our prefixes, we'll accept input from any address on this port
             // which is how the advertisement should work.  We won't register
@@ -166,6 +166,7 @@ namespace TwainDirect.Support
             }
             catch (Exception exception)
             {
+                m_httplistener = null;
                 Log.Error("ServerStart: Start failed..." + exception.Message);
                 return (false);
             }
@@ -203,7 +204,6 @@ namespace TwainDirect.Support
             // Stop the listener...
             if (m_httplistener != null)
             {
-                m_httplistener.Stop();
                 m_httplistener.Close();
                 m_httplistener = null;
             }

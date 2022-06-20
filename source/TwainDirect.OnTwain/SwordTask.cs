@@ -904,7 +904,7 @@ namespace TwainDirect.OnTwain
             List<string> lszTwidentity = new List<string>();
             twidentity = default(TWAIN.TW_IDENTITY);
             for (sts = twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETFIRST, ref twidentity);
-                 sts != TWAIN.STS.ENDOFLIST;
+                 sts != TWAIN.STS.ENDOFLIST && sts != TWAIN.STS.BUMMER;
                  sts = twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETNEXT, ref twidentity))
             {
                 // If we're doing an inquiry, only pass on the requested item...
@@ -2052,6 +2052,7 @@ namespace TwainDirect.OnTwain
             string szAutomaticSenseMedium;
             string szCapCameraSide;
             string szCapFeederEnabled;
+            string szDuplexEnabled;
             string szStatus;
             string[] aszCapabilities;
             TWAIN.STS sts;
@@ -2119,11 +2120,12 @@ namespace TwainDirect.OnTwain
                 {
                     iPixelformatFlags += 1;
                 }
-
+                
                 // Get the source settings...
                 szAutomaticSenseMedium = swordsource.GetAutomaticSenseMedium();
                 szCapCameraSide = swordsource.GetCameraSide();
                 szCapFeederEnabled = swordsource.GetFeederEnabled();
+                szDuplexEnabled = swordsource.GetDuplexEnabled();
                 bool blAutomaticSenseMedium = false;
 
                 // Try to do automatic sense medium...
@@ -2160,6 +2162,13 @@ namespace TwainDirect.OnTwain
                     {
                         return (SwordStatus.Fail);
                     }
+                }
+
+                // Enable duplex...
+                if (!string.IsNullOrEmpty(szDuplexEnabled))
+                {
+                    szStatus = "";
+                    m_twain.Send("DG_CONTROL", "DAT_CAPABILITY", "MSG_SET", ref szDuplexEnabled, ref szStatus);
                 }
 
                 // If we don't have a pixelformat, make do with what we have...
@@ -4401,6 +4410,8 @@ namespace TwainDirect.OnTwain
                 TWAINWorkingGroup.Log.Warn("Error creating toolkit...");
                 return (null);
             }
+            // Open the DSM...
+            twain.DatParent(TWAIN.DG.CONTROL, TWAIN.MSG.OPENDSM, ref intptrHwnd);
 
             // Get the default driver...
             if (string.IsNullOrEmpty(a_szScanner))
@@ -4422,7 +4433,7 @@ namespace TwainDirect.OnTwain
             {
                 twidentity = default(TWAIN.TW_IDENTITY);
                 for (sts = twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETFIRST, ref twidentity);
-                     sts != TWAIN.STS.ENDOFLIST;
+                     sts != TWAIN.STS.ENDOFLIST && sts != TWAIN.STS.BUMMER;
                      sts = twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETNEXT, ref twidentity))
                 {
                     if (twidentity.ProductName.Get() == a_szScanner)
@@ -6112,6 +6123,16 @@ namespace TwainDirect.OnTwain
                 }
 
                 /// <summary>
+                /// Return the automatic sense medium setting...
+                /// </summary>
+                /// <returns>the TWAIN command or an empty string</returns>
+                public string GetDuplexEnabled()
+                {
+                    // We support it, so return whatever we have...
+                    return (m_szDuplexEnabled);
+                }
+
+                /// <summary>
                 /// Return the camera side setting...
                 /// </summary>
                 /// <returns>the TWAIN command or an empty string</returns>
@@ -6320,7 +6341,7 @@ namespace TwainDirect.OnTwain
                                  || (m_szSource == "feederRear"))
                         {
                             // Address the feeder...
-                            m_szFeederEnabled = "CAP_FEEDERENABLED,TWON_ONEVALUE,TWTY_BOOL,1";
+                            m_szFeederEnabled = "CAP_FEEDERENABLED,TWON_ONEVALUE,TWTY_BOOL,1"; // TRUE
 
                             // Feeder front and rear...
                             if (m_szSource == "feeder")
@@ -6332,14 +6353,14 @@ namespace TwainDirect.OnTwain
                             // Feeder front...
                             else if (m_szSource == "feederFront")
                             {
-                                m_szFeederEnabled = "CAP_FEEDERENABLED,TWON_ONEVALUE,TWTY_BOOL,1"; // TRUE
+                                m_szDuplexEnabled = "CAP_DUPLEXENABLED,TWON_ONEVALUE,TWTY_BOOL,0"; // FALSE
                                 m_szCameraSide = "CAP_CAMERASIDE,TWON_ONEVALUE,TWTY_UINT16,1"; // TWCS_TOP
                             }
 
                             // Feeder rear...
                             else if (m_szSource == "feederRear")
                             {
-                                m_szFeederEnabled = "CAP_FEEDERENABLED,TWON_ONEVALUE,TWTY_BOOL,1"; // TRUE
+                                m_szDuplexEnabled = "CAP_DUPLEXENABLED,TWON_ONEVALUE,TWTY_BOOL,0"; // FALSE
                                 m_szCameraSide = "CAP_CAMERASIDE,TWON_ONEVALUE,TWTY_UINT16,2"; // TWCS_BOTTOM
                             }
                         }

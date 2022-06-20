@@ -2699,5 +2699,10 @@ namespace TwainDirect.App
         private ResourceManager m_resourcemanager;
 
         #endregion
+
+        private void m_pictureboxImage1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

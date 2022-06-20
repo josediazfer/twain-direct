@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="errCloudConnectionFailed" xml:space="preserve">
+    <value>TWAIN Cloud no se pudo conectar, reintentando en {0} segundos...</value>
+  </data>
   <data name="errLookingForScanners" xml:space="preserve">
     <value>Localizando escaners...</value>
   </data>
@@ -254,5 +257,11 @@
   </data>
   <data name="strTextStartNpm" xml:space="preserve">
     <value>Iniciando 'npm start', esperaremos 15 minutos a que arranque.</value>
+  </data>
+  <data name="strTextTwainCloudReady" xml:space="preserve">
+    <value>TWAIN Cloud inciado correctamente</value>
+  </data>
+  <data name="strTextTwainLocalReady" xml:space="preserve">
+    <value>TWAIN Local iniciado correctamente</value>
   </data>
 </root>

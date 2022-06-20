@@ -88,7 +88,7 @@ namespace TwainDirect.OnTwain
         {
             TwainLocalOnTwain twainlocalontwain;
             TwainLocalOnTwainParameters twainlocalontwainparameters = (TwainLocalOnTwainParameters)a_objectParameters;
-
+            
             // Create our object...
             twainlocalontwain = new TwainLocalOnTwain
             (

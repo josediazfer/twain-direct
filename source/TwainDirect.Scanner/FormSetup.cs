@@ -716,26 +716,25 @@ namespace TwainDirect.Scanner
                         loginForm.Close();
                         await applicationManager.GetScanners().ContinueWith(scannersTask =>
                          {
-                             var scannersCloud = scannersTask.Result;
                              var context = new CloudContext();
-                             var scannersDb = context.Scanners.ToArray();
+                             var scannersLocalDb = context.Scanners;
+                             var scannersServerDb = scannersTask.Result;
 
-                             foreach (var scannerDb in scannersDb)
+                             foreach (var scannerLocal in scannersLocalDb)
                              {
-                                 Boolean hasScanner = false;
-
-                                 foreach (var scannerCloud in scannersCloud)
+                                 context.Scanners.Remove(scannerLocal);
+                             }
+                             context.SaveChanges();
+                             foreach (var scannerResult in scannersServerDb)
+                             {
+                                 CloudScanner scannerDb = new CloudScanner
                                  {
-                                     if (scannerDb.Id == scannerCloud.Id)
-                                     {
-                                         hasScanner = true;
-                                         break;
-                                     }
-                                 }
-                                 if (!hasScanner)
-                                 {
-                                     context.Entry(scannerDb).State = System.Data.Entity.EntityState.Deleted;
-                                 }
+                                     AuthorizationToken = args.Tokens.AuthorizationToken,
+                                     RefreshToken = args.Tokens.RefreshToken,
+                                     Id = scannerResult.Id,
+                                     Name = scannerResult.Name,
+                                 };
+                                 context.Entry(scannerDb).State = System.Data.Entity.EntityState.Added;
                              }
                              context.SaveChanges();
                              BeginInvoke(new MethodInvoker(delegate() { LoadRegisteredCloudDevices(); }));

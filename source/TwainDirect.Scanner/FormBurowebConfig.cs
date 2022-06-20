@@ -100,12 +100,18 @@ namespace TwainDirect.Scanner
                         }
                     }
                     baseOutFolder = getBaseFolder();
+
                     // Copy the configuration files
                     foreach (string szExecutableConfig in szExecutableConfigs)
                     {
-                        string szExecutableConfigPath = Path.Combine(baseOutFolder, Path.Combine(szExecutableConfig, szExecutableConfig + ".appdata.txt"));
+                        string szBaseConfigPath = Path.Combine(baseOutFolder, szExecutableConfig);
+                        string szExecutableConfigPath = Path.Combine(szBaseConfigPath, szExecutableConfig + ".appdata.txt");
                         string szTempConfigFile = tempConfigFiles[iIndex++];
 
+                        if (!Directory.Exists(szBaseConfigPath))
+                        {
+                            Directory.CreateDirectory(szBaseConfigPath);
+                        }
                         File.Copy(szTempConfigFile, szExecutableConfigPath, true);
                     }
                     File.WriteAllText(Path.Combine(baseOutFolder, "lastBurowebConfig.txt"), m_textBurowebURL.Text);

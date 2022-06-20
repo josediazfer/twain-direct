@@ -63,7 +63,7 @@ namespace TwainDirect.OnTwain
             m_szWriteFolder = Config.Get("writeFolder", "");
             m_blWriteFolderNotNull = (Config.Get("writeFolder", null) != null);
             szScanner = Config.Get("scanner", null);
-
+           
             // Check for a TWAIN driver, yelp if we can't find one...
             m_szTwainDefaultDriver = ProcessSwordTask.GetCurrentDriver(m_szWriteFolder, szScanner);
             if (m_szTwainDefaultDriver == null)

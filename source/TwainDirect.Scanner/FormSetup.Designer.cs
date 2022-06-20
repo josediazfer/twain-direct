@@ -65,7 +65,6 @@ namespace TwainDirect.Scanner
             // 
             // m_buttonManageTwainLocal
             // 
-            this.m_buttonManageTwainLocal.Enabled = false;
             this.m_buttonManageTwainLocal.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.m_buttonManageTwainLocal.Location = new System.Drawing.Point(49, 145);
             this.m_buttonManageTwainLocal.Name = "m_buttonManageTwainLocal";

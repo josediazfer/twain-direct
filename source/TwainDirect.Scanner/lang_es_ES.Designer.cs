@@ -61,6 +61,15 @@ namespace TwainDirect.Scanner {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TWAIN Cloud no se pudo conectar, reintentando en {0} segundos....
+        /// </summary>
+        public static string errCloudConnectionFailed {
+            get {
+                return ResourceManager.GetString("errCloudConnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Localizando escaners....
         /// </summary>
         public static string errLookingForScanners {
@@ -435,6 +444,24 @@ namespace TwainDirect.Scanner {
         public static string strTextStartNpm {
             get {
                 return ResourceManager.GetString("strTextStartNpm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TWAIN Cloud inciado correctamente.
+        /// </summary>
+        public static string strTextTwainCloudReady {
+            get {
+                return ResourceManager.GetString("strTextTwainCloudReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TWAIN Local iniciado correctamente.
+        /// </summary>
+        public static string strTextTwainLocalReady {
+            get {
+                return ResourceManager.GetString("strTextTwainLocalReady", resourceCulture);
             }
         }
     }

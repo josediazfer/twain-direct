@@ -1471,16 +1471,18 @@ namespace TwainDirect.OnTwain
             Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
             BitmapData bitmapdata = bitmap.LockBits(rectangle, ImageLockMode.ReadWrite, bitmap.PixelFormat);
             iImageBytes = Math.Abs(bitmapdata.Stride) * bitmap.Height;
-
+            
             // And the stoooooopid BGR...
             if (bitmap.PixelFormat == PixelFormat.Format24bppRgb)
             {
                 byte[] abScan0 = new byte[iImageBytes];
+                int bitmapRowLength = bitmapdata.Stride - bitmapdata.Stride % 3;
+
                 Marshal.Copy(bitmapdata.Scan0, abScan0, 0, iImageBytes);
                 for (int rr = 0; rr < bitmap.Height; rr++)
                 {
                     int rrOffset = rr * bitmapdata.Stride;
-                    for (int cc = 0; cc < bitmapdata.Stride; cc += 3)
+                    for (int cc = 0; cc < bitmapRowLength; cc += 3)
                     {
                         byte bTmp = abScan0[rrOffset + cc];
                         abScan0[rrOffset + cc] = abScan0[rrOffset + cc + 2];
@@ -1490,6 +1492,8 @@ namespace TwainDirect.OnTwain
                 Marshal.Copy(abScan0, 0, bitmapdata.Scan0, iImageBytes);
                 abScan0 = null;
             }
+            // Force not compression (using bitmap) 
+            twimageinfo.Compression = ((ushort)TWAIN.TWCP.NONE);
 
             // Save the image to disk, along with any metadata...
             sts = ReportImage(twimageinfo, bitmapdata.Scan0, iImageBytes);
@@ -2878,13 +2882,13 @@ namespace TwainDirect.OnTwain
             // is written so that only 'false' will work...
             if (Config.Get("useCapIndicators", "true") != "false")
             {
-                szUserInterface = "FALSE,FALSE," + m_formtwain.Handle;
+                szUserInterface = "FALSE,FALSE," + m_intptrHwnd;
             }
             else
             {
-                szUserInterface = "TRUE,FALSE," + m_formtwain.Handle;
+                szUserInterface = "TRUE,FALSE," + m_intptrHwnd;
             }
-                
+            
             // Start scanning (no UI)...
             szStatus = "";
             sts = Send("DG_CONTROL", "DAT_USERINTERFACE", "MSG_ENABLEDS", ref szUserInterface, ref szStatus);

@@ -245,12 +245,12 @@ namespace TwainDirect.Scanner
             DeviceSession devicesession = null;
             string szCloudApiRoot = CloudManager.GetCloudApiRoot();
             string szCloudScannerId = "";
-            
-            var cloudScanner = GetCurrentCloudScanner();
+            CloudScanner cloudScanner = GetCurrentCloudScanner();
+
             // If cloud fails, we should keep going so that the
             // user can still run TWAIN Local...
-            if (cloudScanner != null)
-            { 
+            if (cloudScanner != null && !String.IsNullOrEmpty(szCloudApiRoot))
+            {
                 try
                 {
                     
@@ -274,7 +274,7 @@ namespace TwainDirect.Scanner
 
             // Start monitoring for commands...
             var blSuccess = m_twainlocalscannerdevice.DeviceHttpServerStart(szCloudApiRoot, szCloudScannerId, startingCallback);
-            if (blSuccess && devicesession != null)
+            if (devicesession != null)
             {
                 // Start cloud connection...
                 return await m_twainlocalscannerdevice.DeviceCloudServerConnStart(devicesession, szCloudApiRoot, szCloudScannerId, startingCallback);
