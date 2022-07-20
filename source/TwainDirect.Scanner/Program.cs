@@ -30,6 +30,14 @@ namespace TwainDirect.Scanner
             FormMain form1;
             bool blCheckRunning = true;
             ResourceManager resourceManager = getResourceManager();
+            OperatingSystem os = Environment.OSVersion;
+
+            // Windows versions equal or lower that Windows 7 then they are not supported (missing websocket implementation)
+            if (os.Version.Major < 6 || (os.Version.Major == 6 && os.Version.Minor < 2))
+            {
+                MessageBox.Show("Windows version not supported. Require Windows 8 or major", "TWAIN Direct: Application");
+                Environment.Exit(1);
+            }
 
             // Are we already running?
             foreach (string szArg in a_aszArgs)

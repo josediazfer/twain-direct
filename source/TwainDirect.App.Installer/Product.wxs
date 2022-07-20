@@ -59,6 +59,8 @@
     <UI>
       <UIRef Id="WixUI_InstallDir" />
     </UI>
-
+	<Condition Message="This application is only supported on Windows 8 or higher.">
+		  <![CDATA[Installed OR (VersionNT >= 602)]]>
+	</Condition>
   </Product>
 </Wix>
