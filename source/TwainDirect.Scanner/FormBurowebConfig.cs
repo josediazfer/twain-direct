@@ -7,6 +7,7 @@ using HazyBits.Twain.Cloud.Forms;
 using TwainDirect.Support;
 using System.Resources;
 using System.Diagnostics;
+using System.Net.Security;
 
 namespace TwainDirect.Scanner
 {
@@ -43,7 +44,7 @@ namespace TwainDirect.Scanner
         {
             string szbaseUrl;
             FacebookLoginForm loginForm;
-
+            
             if (!m_textBurowebURL.Text.StartsWith("https://") && !m_textBurowebURL.Text.StartsWith("http://"))
             {
                 MessageBox.Show("La direccíon URL de buroweb no es valida o no se informo", "Configuracion");
@@ -54,13 +55,18 @@ namespace TwainDirect.Scanner
             loginForm.Authorized += (_, args) =>
             {
                 List<string> tempConfigFiles = new List<string>();
-
+                RemoteCertificateValidationCallback remoteCertValidationCallback = delegate
+                {
+                    return true;
+                };
+                ServicePointManager.ServerCertificateValidationCallback += remoteCertValidationCallback;
                 try
                 {
                     JsonLookup jsonLookup = new JsonLookup();
                     long a_lJsonErrorindex = 0;
                     string[] szExecutableConfigs = new string[] { "TwainDirect.OnTwain", "TwainDirect.Scanner"};
                     string baseOutFolder;
+                   
                     WebClient webClient = new WebClient();
                     int iIndex = 0;
 
@@ -124,6 +130,7 @@ namespace TwainDirect.Scanner
                 }
                 finally
                 {
+                    ServicePointManager.ServerCertificateValidationCallback -= remoteCertValidationCallback;
                     // Clean up temporal config files
                     foreach (string szTempConfigFile in tempConfigFiles)
                     {
