@@ -60,6 +60,7 @@ namespace TwainDirect.Scanner
                     return true;
                 };
                 ServicePointManager.ServerCertificateValidationCallback += remoteCertValidationCallback;
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 try
                 {
                     JsonLookup jsonLookup = new JsonLookup();
