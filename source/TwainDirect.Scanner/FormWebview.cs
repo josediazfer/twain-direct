@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.IO;
 using HazyBits.Twain.Cloud.Client;
 using HazyBits.Twain.Cloud.Forms;
 using Microsoft.Web.WebView2.Core;
@@ -35,8 +27,10 @@ namespace TwainDirect.Scanner
 
         async void InitializeAsync()
         {
+            CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(userDataFolder: Path.GetTempPath(), options: null);
+
             webView.CoreWebView2InitializationCompleted += WebView_CoreWebView2InitializationCompleted;
-            await webView.EnsureCoreWebView2Async(null);
+            await webView.EnsureCoreWebView2Async(environment);
         }
 
         private void WebView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
