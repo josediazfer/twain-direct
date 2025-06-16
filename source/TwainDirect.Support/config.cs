@@ -341,28 +341,6 @@ namespace TwainDirect.Support
             NativeMethods.SendMessage(a_intptrHandle, NativeMethods.BCM_SETSHIELD, IntPtr.Zero, IntPtr.Zero - 1);
         }
 
-        /// <summary>
-        /// Change the default browser used by the webbrowser control
-        /// </summary>
-        public static void ChangeInternetExplorerVersion(int version = BrowserEmulationValueEdge14)
-        {
-            RegistryKey registrybrowser = Registry.CurrentUser.OpenSubKey(BrowserEmulationSubKey, true);
-
-            if (registrybrowser == null)
-            {
-                registrybrowser = Registry.CurrentUser.CreateSubKey(BrowserEmulationSubKey, RegistryKeyPermissionCheck.ReadWriteSubTree);
-            }
-
-            string applicationName = Process.GetCurrentProcess().ProcessName + ".exe";
-            object currentValue = registrybrowser?.GetValue(applicationName);
-
-            if (currentValue == null || (int)currentValue != version)
-            {
-                registrybrowser?.SetValue(applicationName, version, RegistryValueKind.DWord);
-            }
-            registrybrowser?.Close();
-        }
-
         #endregion
 
         // Public Attributes...
@@ -445,10 +423,6 @@ namespace TwainDirect.Support
         /// </summary>
         private static string ms_szWriteFolder;
 
-        /// <summary>
-        /// The registry path to the browser emulation version
-        /// </summary>
-        private const string BrowserEmulationSubKey = @"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION";
 
         #endregion
     }
