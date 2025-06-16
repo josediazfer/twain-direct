@@ -707,7 +707,7 @@ namespace TwainDirect.Scanner
 
                 Invoke(new MethodInvoker(delegate ()
                 { 
-                    FacebookLoginForm loginForm = new FacebookLoginForm(signinResponse.Url);
+                    FormLogin loginForm = Utils.GetLoginForm(signinResponse.Url);
 
                     loginForm.Authorized += async (_, args) =>
                     {

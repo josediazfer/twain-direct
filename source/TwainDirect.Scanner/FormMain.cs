@@ -37,11 +37,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.Net.Security;
+using System.Net;
 using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TwainDirect.Support;
+using static TwainDirect.Support.TwainLocalScannerDevice;
 
 namespace TwainDirect.Scanner
 {
@@ -766,7 +769,7 @@ namespace TwainDirect.Scanner
                     pdfraster.InstallVisualStudioRedistributables();
                 }
             }
-
+            
             // Start polling...
             Display("");
             Display("Starting, please wait...");
@@ -901,10 +904,19 @@ namespace TwainDirect.Scanner
         private static bool ms_blSystemShutdown = false;
 
         #endregion
-
         private void FormMain_Load(object sender, EventArgs e)
         {
-            Config.ChangeInternetExplorerVersion();
+            RemoteCertificateValidationCallback remoteCertValidationCallback = delegate
+            {
+                return true;
+            };
+            ServicePointManager.ServerCertificateValidationCallback += remoteCertValidationCallback;
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+        }
+
+        private Action async()
+        {
+            throw new NotImplementedException();
         }
 
         private void m_richtextboxTask_TextChanged(object sender, EventArgs e)

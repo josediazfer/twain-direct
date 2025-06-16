@@ -43,24 +43,20 @@ namespace TwainDirect.Scanner
         private void m_buttonConfigure_Click(object sender, EventArgs e)
         {
             string szbaseUrl;
-            FacebookLoginForm loginForm;
-            
+            FormLogin loginForm;
+            Boolean isWindowsPlatform = Environment.OSVersion.ToString().Contains("Microsoft Windows");
+
             if (!m_textBurowebURL.Text.StartsWith("https://") && !m_textBurowebURL.Text.StartsWith("http://"))
             {
                 MessageBox.Show("La direccíon URL de buroweb no es valida o no se informo", "Configuracion");
                 return;
             }
             szbaseUrl = m_textBurowebURL.Text + "/report/scannerManager.do";
-            loginForm = new FacebookLoginForm(szbaseUrl + "?action=signin");
+            loginForm = Utils.GetLoginForm(szbaseUrl + "?action=signin");
             loginForm.Authorized += (_, args) =>
             {
                 List<string> tempConfigFiles = new List<string>();
-                RemoteCertificateValidationCallback remoteCertValidationCallback = delegate
-                {
-                    return true;
-                };
-                ServicePointManager.ServerCertificateValidationCallback += remoteCertValidationCallback;
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
                 try
                 {
                     JsonLookup jsonLookup = new JsonLookup();
@@ -131,7 +127,6 @@ namespace TwainDirect.Scanner
                 }
                 finally
                 {
-                    ServicePointManager.ServerCertificateValidationCallback -= remoteCertValidationCallback;
                     // Clean up temporal config files
                     foreach (string szTempConfigFile in tempConfigFiles)
                     {

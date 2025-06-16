@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Resources;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TwainDirect.Support;
 
@@ -17,6 +16,85 @@ namespace TwainDirect.Scanner
     /// </summary>
     static class Program
     {
+        static FileStream pidRunningStream = null;
+
+        public static void Exit()
+        {
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+            {
+                Process.GetCurrentProcess().Kill();
+            }
+            else
+            {
+                Application.Exit();
+            }
+        }
+
+        private static void FixConsoleOut()
+        {
+            /*
+                FIX: Mono crash whe the console output is closed. For example, when we relaunch 
+                the TwainDirect.Scanner application and close the current program instance. 
+                The new program instance parent is the init process
+            */
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+            {
+                try
+                {
+                    Console.WriteLine("");
+                }
+                catch (Exception)
+                {
+                    Console.SetOut(StreamWriter.Null);
+                    Console.SetError(StreamWriter.Null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the current process is running
+        /// </summary>
+        /// <returns>Task<int></returns>
+        private static int GetProcessInstanceRunning()
+        {
+            string szFilePidPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            int iProcessId = Process.GetCurrentProcess().Id;
+            bool blLockRange = false;
+
+            szFilePidPath = Path.Combine(szFilePidPath, "twaindirect");
+            szFilePidPath = Path.Combine(szFilePidPath, Path.GetFileNameWithoutExtension(Application.ExecutablePath));
+            szFilePidPath = Path.Combine(szFilePidPath, ".pid");
+            StreamWriter pidStreamWriter = null;
+
+            pidRunningStream = File.Open(szFilePidPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            try
+            {
+                pidRunningStream.Lock(0, 1);
+                blLockRange = true;
+                pidStreamWriter = new StreamWriter(pidRunningStream);
+                pidStreamWriter.Write('\n' + iProcessId.ToString());
+                pidStreamWriter.Flush();
+            }
+            catch (Exception)
+            {
+                ;
+            }
+            finally
+            {
+                if (!blLockRange)
+                {
+                    pidRunningStream.Seek(1, 0);
+                    using (StreamReader pidStreamReader = new StreamReader(pidRunningStream))
+                    {
+                        iProcessId = Int32.Parse(pidStreamReader.ReadLine());
+                    }
+                    pidRunningStream.Dispose();
+                }
+            }
+
+            return iProcessId;
+        }
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -28,15 +106,23 @@ namespace TwainDirect.Scanner
             string szWriteFolder;
             float fScale;
             FormMain form1;
-            bool blCheckRunning = true;
+            bool blCheckRunning = Config.Get("checkrunning", "true") == "true";
             ResourceManager resourceManager = getResourceManager();
             OperatingSystem os = Environment.OSVersion;
+            int iProcessId;
 
             // Windows versions equal or lower that Windows 7 then they are not supported (missing websocket implementation)
-            if (os.Version.Major < 6 || (os.Version.Major == 6 && os.Version.Minor < 2))
+            if (os.Platform == PlatformID.Win32NT)
             {
-                MessageBox.Show("Windows version not supported. Require Windows 8 or major", "TWAIN Direct: Application");
-                Environment.Exit(1);
+                if (os.Version.Major < 6 || (os.Version.Major == 6 && os.Version.Minor < 2))
+                {
+                    MessageBox.Show("Windows version not supported. Require Windows 8 or major", "TWAIN Direct: Application");
+                    Environment.Exit(1);
+                }
+            }
+            else if (os.Platform != PlatformID.Unix)
+            {
+                MessageBox.Show("OS version not supported. Only Windows or Linyx system are supported", "TWAIN Direct: Application");
             }
 
             // Are we already running?
@@ -48,19 +134,7 @@ namespace TwainDirect.Scanner
                     break;
                 }
             }
-            if (blCheckRunning)
-            {
-                Process[] aprocess = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location));
-                foreach (Process process in aprocess)
-                {
-                    // If it ain't us, it's somebody else...
-                    if (process.Id != Process.GetCurrentProcess().Id)
-                    {
-                        MessageBox.Show(resourceManager.GetString("errRunningOtherInstance"), resourceManager.GetString("strFormMainTitle"));
-                        Environment.Exit(1);
-                    }
-                }
-            }
+
             // Load our configuration information and our arguments,
             // so that we can access them from anywhere in the code...
             if (!Config.Load(Application.ExecutablePath, a_aszArgs, "appdata.txt"))
@@ -73,23 +147,30 @@ namespace TwainDirect.Scanner
             szWriteFolder = Config.Get("writeFolder", "");
             szExecutableName = Config.Get("executableName", "");
 
-            // Turn on logging...
-            Log.Open(szExecutableName, szWriteFolder, 1);
-            Log.SetLevel((int)Config.Get("logLevel", 0));
-            Log.Info(szExecutableName + " Log Started...");
-
             // Make sure that any stale TwainDirectOnTwain processes are gone...
-            foreach (Process processTwainDirectOnTwain in Process.GetProcessesByName("TwainDirect.OnTwain"))
+            iProcessId = GetProcessInstanceRunning();
+            if (iProcessId != Process.GetCurrentProcess().Id)
             {
+                if (blCheckRunning)
+                {
+                    MessageBox.Show(resourceManager.GetString("errRunningOtherInstance"), resourceManager.GetString("strFormMainTitle"));
+                    Environment.Exit(1);
+                }
                 try
                 {
-                    processTwainDirectOnTwain.Kill();
+                    Process.GetProcessById(iProcessId).Kill();
                 }
                 catch (Exception exception)
                 {
                     Log.Error("unable to kill TwainDirect.OnTwain - " + exception.Message);
                 }
             }
+
+            // Turn on logging...
+            Log.Open(szExecutableName, szWriteFolder, 1);
+            Log.SetLevel((int)Config.Get("logLevel", 0));
+            Log.Info(szExecutableName + " Log Started...");
+            FixConsoleOut();
 
             // Figure out what we're doing...
             string szCommand;
@@ -108,11 +189,11 @@ namespace TwainDirect.Scanner
                     //ServiceBase.Run(service);
                     break;
 
-                case Mode.TERMINAL:                    
+                case Mode.TERMINAL:
                     if (TwainLocalScanner.GetPlatform() == TwainLocalScanner.Platform.WINDOWS)
                     {
                         Interpreter.CreateConsole();
-                    }                    
+                    }
                     {
                         string szError = null;
 
@@ -149,12 +230,14 @@ namespace TwainDirect.Scanner
 
                 // Fire up our application window...
                 case Mode.WINDOW:
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
-                    form1 = new FormMain(resourceManager);
-                    Application.Run(form1);
-                    form1.Dispose();
-                    break;
+                    {
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
+                        form1 = new FormMain(resourceManager);
+                        Application.Run(form1);
+                        form1.Dispose();
+                        break;
+                    }
             }
 
 

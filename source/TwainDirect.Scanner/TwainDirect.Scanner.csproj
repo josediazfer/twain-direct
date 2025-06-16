@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TwainDirect.Scanner</RootNamespace>
     <AssemblyName>TwainDirect.Scanner</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -114,6 +114,12 @@
     <Compile Include="ConfirmScan.Designer.cs">
       <DependentUpon>ConfirmScan.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormWebview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormWebview.Designer.cs">
+      <DependentUpon>FormWebview.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormBurowebConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -162,11 +168,16 @@
     <Compile Include="Storage\CloudContext.cs" />
     <Compile Include="Storage\CloudScanner.cs" />
     <Compile Include="Terminal.cs" />
+    <Compile Include="Utils.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ConfirmScan.resx">
       <DependentUpon>ConfirmScan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormWebview.resx">
+      <DependentUpon>FormWebview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormBurowebConfig.resx">
       <DependentUpon>FormBurowebConfig.cs</DependentUpon>
@@ -237,6 +248,9 @@
     <None Include="Resources\SystemTray.ico" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2">
+      <Version>1.0.3296.44</Version>
+    </PackageReference>
     <PackageReference Include="SQLite.CodeFirst">
       <Version>1.5.1.25</Version>
     </PackageReference>
