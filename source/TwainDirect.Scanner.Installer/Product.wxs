@@ -46,7 +46,11 @@
       <ComponentRef Id="System.Data.SQLite.EF6.dll"/>
       <ComponentRef Id="System.Data.SQLite.Linq.dll"/>
       <ComponentRef Id="System.Net.Http.Formatting.dll"/>
-
+      <ComponentRef Id="Microsoft.Web.WebView2.Core.dll"/>
+	  <ComponentRef Id="Microsoft.Web.WebView2.Wpf.dll"/>
+	  <ComponentRef Id="Microsoft.Web.WebView2.WinForms.dll"/>
+	  <ComponentRef Id="WebView2Loader.dll"/>
+		
       <ComponentRef Id="pdfras_reader_managed.dll"/>
       <ComponentRef Id="pdfras_writer_managed.dll"/>
       <ComponentRef Id="pdfras_digitalsignature.dll"/>

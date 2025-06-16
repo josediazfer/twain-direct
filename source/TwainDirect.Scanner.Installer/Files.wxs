@@ -25,7 +25,28 @@
 
       <Directory Id="$(var.PlatformProgramFilesFolder)">
         <Directory Id="INSTALLFOLDER" Name="TWAIN Direct Scanner">
+			<Component Id="Microsoft.Web.WebView2.Core.dll" Guid="{94E930D3-6902-4E73-81BD-B5F44C564145}">
+				<File Id="Microsoft.Web.WebView2.Core.dll" Source="$(var.TwainDirect.Scanner.TargetDir)\Microsoft.Web.WebView2.Core.dll" KeyPath="yes" />
+			</Component>
 
+			<Component Id="Microsoft.Web.WebView2.Wpf.dll" Guid="{6E080159-9279-48FA-ABA8-F0E5272567E8}">
+				<File Id="Microsoft.Web.WebView2.Wpf.dll" Source="$(var.TwainDirect.Scanner.TargetDir)\Microsoft.Web.WebView2.Wpf.dll" KeyPath="yes" />
+			</Component>
+
+			<Component Id="Microsoft.Web.WebView2.WinForms.dll" Guid="{DB5EC58C-7C16-43B0-A5BE-531300F595B7}">
+				<File Id="Microsoft.Web.WebView2.WinForms.dll" Source="$(var.TwainDirect.Scanner.TargetDir)\Microsoft.Web.WebView2.WinForms.dll" KeyPath="yes" />
+			</Component>
+
+		  <?if $(var.Platform) = x64 ?>
+			<Component Id="WebView2Loader.dll" Guid="{9A0B1645-1E96-43AC-981C-909030B06068}">
+				<File Id="WebView2Loader.dll" Source="$(var.TwainDirect.Scanner.TargetDir)\runtimes\win-x64\native\WebView2Loader.dll" KeyPath="yes" />
+			</Component>
+			<?else ?>
+			<Component Id="WebView2Loader.dll" Guid="{91437C8A-1CD2-4EE3-8EE9-991BB8235045}">
+				<File Id="WebView2Loader.dll" Source="$(var.TwainDirect.Scanner.TargetDir)\runtimes\win-x86\native\WebView2Loader.dll" KeyPath="yes" />
+			</Component>
+		  <?endif ?>
+			
           <Component Id="BouncyCastle.Crypto.dll" Guid="{8A9F17B5-F4DD-443A-80CB-1108AFB9427F}">
             <File Id="BouncyCastle.Crypto.dll" Source="$(var.TwainDirect.Scanner.TargetDir)\BouncyCastle.Crypto.dll" KeyPath="yes" />
           </Component>
